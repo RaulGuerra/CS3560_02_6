@@ -13,7 +13,7 @@ public class Receipt {
 		
 	}
 	
-	// Functions
+	// Getters
 	public String getCheckID() {
 		return checkID;
 	}
@@ -34,6 +34,7 @@ public class Receipt {
 		return date;
 	}
 	
+	// Setters
 	public void setCheckID(String checkID) {
 		this.checkID = checkID;
 	}
