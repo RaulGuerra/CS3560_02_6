@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Food {
 
+	//Fields are used to assist with database queries/methods, like holding onto the values when using SELECT query
 	private String name;
 	private double price;
 	private int calories; 
