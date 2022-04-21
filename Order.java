@@ -1,3 +1,7 @@
+package posSystem;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 /**
  * 
  * @author Christopher
@@ -6,16 +10,16 @@
  * class section: CS 3560.02
  * 
  * This class represents a food order, including its ID, the check ID it corresponds to, 
- * the foodID it contains, and any modifications it may have 
+ * the foodID it contains, and any modifications it may have
  *
  */
+
 public class Order 
 {
 	private int orderID;
 	private int checkID;
 	private int foodID;
 	private String modification;
-	
 	
 	//Constructor class to initiate values
 	Order(int orderID, int checkID, int foodID, String modification)
@@ -24,6 +28,29 @@ public class Order
 		this.checkID = checkID;
 		this.foodID = foodID;
 		this.modification = modification;
+	}
+	
+	/**
+	    * Getter method of name attribute
+	     * @param orderID The order ID that the attribute belongs to 
+	     * @param con Connection to establish the database
+	     * @return the modification details
+	     * @throws Exception
+	*/
+	public static String getModification(int orderID, Connection c) throws Exception {
+		try {
+    		PreparedStatement stmt = c.prepareStatement("SELECT modification FROM Order where orderID=?");
+    		stmt.setInt(1,orderID);
+    		
+       	    ResultSet rs = stmt.executeQuery();
+       	    rs.next();
+       	
+	    	String mod = rs.getString("modification");
+	        
+    	    return mod;
+    	}catch(Exception e){System.out.println(e);}
+		
+		return null;
 	}
 	
 	//getter function = returns the attribute values 
@@ -37,7 +64,7 @@ public class Order
 		return checkID;
 	}
 	
-	public int getFoodI()
+	public int getFoodID()
 	{
 		return foodID;
 	}
