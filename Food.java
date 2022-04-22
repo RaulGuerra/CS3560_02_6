@@ -1,3 +1,5 @@
+package posSystem;
+
 import java.sql.Connection;  
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -58,29 +60,28 @@ public class Food {
      * @return A string containing all the information associated
      * @throws Exception If can't access database
      */
-    public String getFoodinfo(int foodID, Connection con) throws Exception
+    public static String getFoodinfo(int foodID, Connection con) throws Exception
     {
     	try {
     		//Obtains all information associated with the food ID
     		PreparedStatement stmt = con.prepareStatement("SELECT * FROM Food where foodID=?");
     		stmt.setInt(1,foodID);
-    		 
+
     		//Prints all the attributes in that associated row
-    		String result = "";
     	    ResultSet rs = stmt.executeQuery();
-    	    while(rs.next()) {
-    			String id = rs.getString("foodID");
-    			name = rs.getString("name");
-    			price = rs.getDouble("price");
-    			calories = rs.getInt("calories");
-    			description = rs.getString("description");
-    			System.out.println("foodID: "+ id);
-    			System.out.println("name: "+ name);
-    			System.out.println("price: "+ price);
-    			System.out.println("calories: "+ calories);
-    			System.out.println("description: "+ description);
-    			result = id + " " + name + " " + price + " " + calories + " " + description;
-    	    }
+    	    rs.next();
+    	    
+			String id = rs.getString("foodID");
+			String name = rs.getString("name");
+			double price = rs.getDouble("price");
+			int calories = rs.getInt("calories");
+			String description = rs.getString("description");
+			System.out.println("foodID: "+ id);
+			System.out.println("name: "+ name);
+			System.out.println("price: "+ price);
+			System.out.println("calories: "+ calories);
+			System.out.println("description: "+ description);
+			String result = id + " " + name + " " + price + " " + calories + " " + description;
     	    
     	    return result;
     	}catch(Exception e){System.out.println(e);}
@@ -132,7 +133,7 @@ public class Food {
     	    	price = rs.getDouble("price");
     	    	System.out.println("Price: " + price);
     	    }
-    	    //return attribute
+    	    
     	    return price;
     	}catch(Exception e){System.out.println(e);}
     	
