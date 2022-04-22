@@ -2,6 +2,7 @@ package posSystem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 /**
  * 
  * @author Christopher
@@ -28,6 +29,27 @@ public class Order
 		this.checkID = checkID;
 		this.foodID = foodID;
 		this.modification = modification;
+	}
+	
+	public static ArrayList<Order> getOrders(Connection c) throws Exception {
+		ArrayList<Order> orders = new ArrayList<Order>();
+		
+		try {
+    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM Food");
+    		 
+    		String result = "";
+    	    ResultSet rs = stmt.executeQuery();
+    	    while(rs.next()) {
+    			int orderID = rs.getInt("orderID");
+    			int receiptID = rs.getInt("receiptID");
+    			int foodID = rs.getInt("foodID");
+    			String modification = rs.getString("modification");
+    			
+    			orders.add(new Order(orderID, receiptID, foodID, modification));
+    	    }
+    	}catch(Exception e){System.out.println(e);}
+		
+    	return orders;
 	}
 	
 	/**
