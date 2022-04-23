@@ -38,7 +38,7 @@ public class Table {
     }
 	
 	// Getters:
-	// returns the table number of this table
+	// returns all the numbers of every table
 	public int[] getAllTableNums() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT tableNumber FROM `table`");
@@ -73,7 +73,27 @@ public class Table {
 		return seats;
 	}
 	
-	// returns whether the table is occupied
+	// returns all of the amount of seats of the 'table' table
+	public int[] getAllSeats() throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table`");
+			
+			int count = getNumRows();
+			int i = 0;
+			int[] allSeats = new int[count];
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				allSeats[i] = rs.getInt("seats");
+				i++;
+			}
+			return allSeats;
+		}
+		catch (Exception e) {System.out.println(e);}
+		return null;
+	}
+	
+	// returns all of the occupations of every table
 	public boolean[] getAllOccupied() throws Exception{
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT occupied FROM `table`");
@@ -93,7 +113,7 @@ public class Table {
 		return null;
 	}
 	
-	// returns the x-coordinate of where the table is on the UI
+	// returns all of the x-coordinates of where the table is on the UI
 	public int[] getAllXCoords() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT xCoord FROM `table`");
@@ -113,11 +133,24 @@ public class Table {
 		return null;
 	}
 	
-	// returns the y-coordinate of where the table is on the UI
-	public int getAllYCoord() throws Exception {
-		
-		
-		return yCoord;
+	// returns all of the y-coordinate of where the table is on the UI
+	public int[] getAllYCoords() throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT yCoord FROM `table`");
+			
+			int count = getNumRows();
+			int i = 0;
+			int[] yCor = new int[count];
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				yCor[i] = rs.getInt("yCoord");
+				i++;
+			}
+			return yCor;
+		}
+		catch (Exception e) {System.out.println(e);}
+		return null;
 	}
 	
 	// Setters:
@@ -125,7 +158,7 @@ public class Table {
 	// Create a new table with tableNumber key as parameter
 	public void createTable(int tableNum) throws Exception {
 		try {
-			PreparedStatement stmt = con.prepareStatement("INSERT INTO Food (tableNumber, seats, occupied, xCoord, yCoord) VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO `table` (tableNumber, seats, occupied, xCoord, yCoord) VALUES (?, ?, ?, ?, ?)");
 			stmt.setInt(1, tableNum);
 			stmt.setInt(2, 5);
 			stmt.setBoolean(3, false);
@@ -174,26 +207,5 @@ public class Table {
 			stmt.setInt(2, tableNum);
 			stmt.executeUpdate();
 		} catch (Exception e) {System.out.println(e);}
-	}
-	
-	public static void main(String[] args) throws Exception {
-		Table tab = new Table();
-		int[] xVals = tab.getAllXCoords();
-		if (xVals != null) {
-			for (int i = 0; i < xVals.length; i++)
-				System.out.println(xVals[i]);
-		}
-		else
-			System.out.println("Error occurred\n");
-		
-		int[] tabNum = tab.getAllTableNums();
-		if (tabNum != null) {
-			for (int i = 0; i < tabNum.length; i++)
-				System.out.println(tabNum[i]);
-		}
-		else
-			System.out.println("Error occurred\n");
-		
-		tab.setSeat(1, 10);
 	}
 }
