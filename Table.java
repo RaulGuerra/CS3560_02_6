@@ -1,3 +1,8 @@
+import java.sql.Connection;  
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Table {
 	
@@ -6,11 +11,31 @@ public class Table {
 	private boolean isOccupied;
 	private int xCoord;
 	private int yCoord;
+	private static Connection con;
 	
 	// Constructor maybe
-	public void Table() {
-		
+	public Table() {
+		try{
+			String driver = "com.mysql.cj.jdbc.Driver";
+			String url = "jdbc:mysql://localhost:3306/posdb";
+			String username = "root";
+			String password = "DBpassword1";
+			Class.forName(driver);
+	 		   
+			con = DriverManager.getConnection(url,username,password);
+		} catch(Exception e){System.out.println(e);}		  
 	}
+	
+    public static int getNumRows() throws Exception 
+    {
+    	PreparedStatement stmt = con.prepareStatement("select count(*) from `table`");
+        //Executing the query
+        ResultSet rs = stmt.executeQuery();
+        //Retrieving the result
+        rs.next();
+        int count = rs.getInt(1);
+        return count;
+    }
 	
 	// Getters:
 	// returns the table number of this table
@@ -19,7 +44,17 @@ public class Table {
 	}
 	
 	// returns the number of seats at this table
-	public int getSeats() {
+	public int getSeats(int tableNum) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table` where tableNumber=?");
+			stmt.setInt(1, tableNum);
+			
+			int seats = 0;
+			ResultSet rs = stmt.executeQuery();
+			seats = rs.getInt("seats");
+			return seats;
+		}
+		catch (Exception e) {System.out.println(e);}
 		return seats;
 	}
 	
@@ -29,8 +64,23 @@ public class Table {
 	}
 	
 	// returns the x-coordinate of where the table is on the UI
-	public int getXCoord() {
-		return xCoord;
+	public int[] getAllXCoords() throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT xCoord FROM `table`");
+			
+			int count = getNumRows();
+			int i = 0;
+			int[] xCor = new int[count];
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				xCor[i] = rs.getInt("xCoord");
+				i++;
+			}
+			return xCor;
+		}
+		catch (Exception e) {System.out.println(e);}
+		return null;
 	}
 	
 	// returns the y-coordinate of where the table is on the UI
@@ -63,5 +113,16 @@ public class Table {
 	// set the y-coordinate of where the table is on the UI
 	public void setYCoord(int y) {
 		
+	}
+	
+	public static void main(String[] args) throws Exception {
+		Table tab = new Table();
+		int[] xVals = tab.getAllXCoords();
+		if (xVals != null) {
+			for (int i = 0; i < xVals.length; i++)
+				System.out.println(xVals[i]);
+		}
+		else
+			System.out.println("Error occurred\n");
 	}
 }
