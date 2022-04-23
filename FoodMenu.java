@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class FoodMenu {
 
@@ -99,8 +101,13 @@ public class FoodMenu {
 				//End Description gets clicked:
 			}
 		});
-		btnNewButton_2.setBounds(553, 162, 91, 23);
+		btnNewButton_2.setBounds(553, 162, 127, 22);
 		frame.getContentPane().add(btnNewButton_2);
+		
+		JLabel lblNewLabel = new JLabel("Add Menu Items To Check:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel.setBounds(72, 58, 303, 45);
+		frame.getContentPane().add(lblNewLabel);
 		
 		
 		
