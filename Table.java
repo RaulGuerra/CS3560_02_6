@@ -39,12 +39,27 @@ public class Table {
 	
 	// Getters:
 	// returns the table number of this table
-	public int getTableNum() {
-		return tableNum;
+	public int[] getAllTableNums() throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT tableNumber FROM `table`");
+			
+			int count = getNumRows();
+			int i = 0;
+			int[] tableNums = new int[count];
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				tableNums[i] = rs.getInt("tableNumber");
+				i++;
+			}
+			return tableNums;
+		}
+		catch (Exception e) {System.out.println(e);}
+		return null;
 	}
 	
 	// returns the number of seats at this table
-	public int getSeats(int tableNum) throws Exception {
+	public int getSeat(int tableNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table` where tableNumber=?");
 			stmt.setInt(1, tableNum);
@@ -59,8 +74,23 @@ public class Table {
 	}
 	
 	// returns whether the table is occupied
-	public boolean getOccupied() {
-		return isOccupied;
+	public boolean[] getAllOccupied() throws Exception{
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT occupied FROM `table`");
+			
+			int count = getNumRows();
+			int i = 0;
+			boolean[] occ = new boolean[count];
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				occ[i] = rs.getBoolean("occupied");
+				i++;
+			}
+			return occ;
+		}
+		catch (Exception e) {System.out.println(e);}
+		return null;
 	}
 	
 	// returns the x-coordinate of where the table is on the UI
@@ -84,19 +114,27 @@ public class Table {
 	}
 	
 	// returns the y-coordinate of where the table is on the UI
-	public int getYCoord() {
+	public int getAllYCoord() throws Exception {
+		
+		
 		return yCoord;
 	}
 	
 	// Setters:
 	
 	// set the table number
-	public void setTableNum(int tableNum) {
-		
+	public void createTable(int tableNum) {
+		// 
 	}
 	
 	// set the number of seats at the table
-	public void setSeats(int seatNum) {
+	public void setSeat(int tableNum, int seatNum) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET seats=? WHERE tableNumber=?");
+			stmt.setInt(1, seatNum);
+			stmt.setInt(2, tableNum);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
 		
 	}
 	
@@ -124,5 +162,15 @@ public class Table {
 		}
 		else
 			System.out.println("Error occurred\n");
+		
+		int[] tabNum = tab.getAllTableNums();
+		if (tabNum != null) {
+			for (int i = 0; i < tabNum.length; i++)
+				System.out.println(tabNum[i]);
+		}
+		else
+			System.out.println("Error occurred\n");
+		
+		tab.setSeat(1, 10);
 	}
 }
