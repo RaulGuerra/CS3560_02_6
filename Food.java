@@ -1,3 +1,5 @@
+package posSystem;
+
 import java.sql.Connection;  
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,14 +10,12 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 public class Food {
-
 	//Fields are used to assist with database queries/methods, like holding onto the values when using SELECT query
 	private String name;
 	private double price;
 	private int calories; 
 	private String description;
 	private static Connection con;
-	
 	
     //constructor
     public Food(String name, double price, int calories, String description) throws ClassNotFoundException, SQLException
@@ -25,19 +25,17 @@ public class Food {
  		  this.calories = calories;
  		  this.description = description;
  		 try{
- 			   String driver = "com.mysql.cj.jdbc.Driver";
- 			   String url = "jdbc:mysql://localhost:3306/posdb";
- 			   String username = "root";
- 			   String password = "DBpassword1";
- 			   Class.forName(driver);
- 			   
- 			   Connection con = DriverManager.getConnection(url,username,password);
- 			  
- 			  } catch(Exception e){System.out.println(e);}
- 			  
- 			
- 			 }
-    
+		   String driver = "com.mysql.cj.jdbc.Driver";
+		   String url = "jdbc:mysql://localhost:3306/posdb";
+		   String username = "root";
+		   String password = "DBpassword1";
+		   Class.forName(driver);
+		   
+		   Connection con = DriverManager.getConnection(url,username,password);
+		  
+		  } catch(Exception e){System.out.println(e);}
+    }
+
     //Constructor with no arguments
     public Food()
     {
@@ -51,6 +49,32 @@ public class Food {
  		   con = DriverManager.getConnection(url,username,password);
  		  } catch(Exception e){System.out.println(e);}
  		  
+    }
+    
+    public static Food getFood(int foodID) throws Exception
+    {
+    	Connection con = Main.getConnection();
+    	Food f = null;
+    	
+    	try {
+    		//Obtains all information associated with the food ID
+    		PreparedStatement stmt = con.prepareStatement("SELECT * FROM Food where foodID=?");
+    		stmt.setInt(1,foodID);
+    		 
+    		//Prints all the attributes in that associated row
+    		String result = "";
+    	    ResultSet rs = stmt.executeQuery();
+    	    while(rs.next()) {
+    			String id = rs.getString("foodID");
+    			String name = rs.getString("name");
+    			double price = rs.getDouble("price");
+    			int calories = rs.getInt("calories");
+    			String description = rs.getString("description");
+    			
+    			f = new Food(name,price,calories,description);
+    	    }
+    	}catch(Exception e){System.out.println(e);}
+    	return f;
     }
     
     /**
@@ -132,7 +156,7 @@ public class Food {
     		//Obtains all information associated with the food ID
     		PreparedStatement stmt = con.prepareStatement("SELECT * FROM Food where foodID=?");
     		stmt.setInt(1,foodID);
-    		 
+
     		//Prints all the attributes in that associated row
     		String result = "";
     	    ResultSet rs = stmt.executeQuery();
@@ -151,8 +175,88 @@ public class Food {
     	return null;
     }
     
+    /**
+<<<<<<< HEAD
+    * Getter method of price attribute
+     * @param foodID The food item ID that the attribute belongs to 
+     * @param con Connection to establish the database
+     * @return price of item
+     * @throws Exception
+     */
+    public double getPrice(int foodID, Connection con) throws Exception
+    {
+    	try {
+    		//use SELECT query to return attribute of item
+    		PreparedStatement stmt = con.prepareStatement("SELECT price FROM Food where foodID=?");
+    		stmt.setInt(1,foodID);
+    		
+       	    ResultSet rs = stmt.executeQuery();
+    	    while(rs.next()) {
+    	    	price = rs.getDouble("price");
+    	    	System.out.println("Price: " + price);
+    	    }
+    	    
+    	    return price;
+    	}catch(Exception e){System.out.println(e);}
+    	
+    	return 0.0;
+    }
     
     /**
+    * Getter method of calories attribute
+     * @param foodID The food item ID that the attribute belongs to 
+     * @param con Connection to establish the database
+     * @return calories of item
+     * @throws Exception
+     */
+    public int getCalories(int foodID, Connection con) throws Exception
+    {
+    	try {
+    		//use SELECT query to return attribute of item
+    		PreparedStatement stmt = con.prepareStatement("SELECT calories FROM Food where foodID=?");
+    		stmt.setInt(1,foodID);
+    		
+       	    ResultSet rs = stmt.executeQuery();
+    	    while(rs.next()) {
+    	    	calories = rs.getInt("calories");
+    	    	System.out.println("Calories: " + calories);
+    	    }
+    	    //return attribute
+    	    return calories;
+    	}catch(Exception e){System.out.println(e);}
+    	
+    	return 0;
+    }
+    
+    /**
+     * Getter method of description attribute
+     * @param foodID The food item ID that the attribute belongs to 
+     * @param con Connection to establish the database
+     * @return description of item
+     * @throws Exception
+     */
+    public String getDescription(int foodID, Connection con) throws Exception
+    {
+    	try {
+    		//use SELECT query to return attribute of item
+    		PreparedStatement stmt = con.prepareStatement("SELECT description FROM Food where foodID=?");
+    		stmt.setInt(1,foodID);
+    		
+    	    ResultSet rs = stmt.executeQuery();
+    	    while(rs.next()) {
+    	    	description = rs.getString("description");
+    	    	System.out.println("Price: " + description);
+    	    }
+    	    //return attribute
+    	    return description;
+    	}catch(Exception e){System.out.println(e);}
+    	
+    	return null;
+    }
+
+    /**
+=======
+>>>>>>> 14e9dc6eba4bd4f273c8952798287c4b8db1fa6d
      * Method to connect to database and a row to the database. FoodID is auto incremented, while the 
      * other attributes are asked by the user before being saved to the database. Uses INSERT INTO db
      * VALUES query to add a food item
@@ -276,6 +380,43 @@ public class Food {
     	return null;
     }
     
+    public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public int getCalories() {
+		return calories;
+	}
+
+	public void setCalories(int calories) {
+		this.calories = calories;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public static Connection getCon() {
+		return con;
+	}
+
+	public static void setCon(Connection con) {
+		Food.con = con;
+	}
 }
