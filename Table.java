@@ -122,9 +122,17 @@ public class Table {
 	
 	// Setters:
 	
-	// set the table number
-	public void createTable(int tableNum) {
-		// 
+	// Create a new table with tableNumber key as parameter
+	public void createTable(int tableNum) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO Food (tableNumber, seats, occupied, xCoord, yCoord) VALUES (?, ?, ?, ?, ?)");
+			stmt.setInt(1, tableNum);
+			stmt.setInt(2, 5);
+			stmt.setBoolean(3, false);
+			stmt.setInt(4, 0);
+			stmt.setInt(5, 0);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
 	}
 	
 	// set the number of seats at the table
@@ -139,18 +147,33 @@ public class Table {
 	}
 	
 	// sets whether the table is occupied
-	public void setOccupied(boolean occupied) {
-		
+	public void setOccupied(int tableNum, boolean occupied) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET occupied=? WHERE tableNumber=?");
+			stmt.setBoolean(1, occupied);
+			stmt.setInt(2, tableNum);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
 	}
 	
 	// set the x-coordinate of where the table is on the UI
-	public void setXCoord(int x) {
-		
+	public void setXCoord(int tableNum, int x) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET xCoord=? WHERE tableNumber=?");
+			stmt.setInt(1, x);
+			stmt.setInt(2, tableNum);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
 	}
 	
 	// set the y-coordinate of where the table is on the UI
-	public void setYCoord(int y) {
-		
+	public void setYCoord(int tableNum, int y) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET yCoord=? WHERE tableNumber=?");
+			stmt.setInt(1, y);
+			stmt.setInt(2, tableNum);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
 	}
 	
 	public static void main(String[] args) throws Exception {
