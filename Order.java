@@ -1,5 +1,6 @@
 package posSystem;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -31,14 +32,14 @@ public class Order
 		this.modification = modification;
 	}
 	
-	public static ArrayList<Order> getOrders(Connection c) throws Exception {
+	public static ArrayList<Order> getOrders() throws Exception {
+		Connection c = Main.getConnection();
 		ArrayList<Order> orders = new ArrayList<Order>();
-		
+
 		try {
-    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM Food");
-    		 
-    		String result = "";
+    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order`");
     	    ResultSet rs = stmt.executeQuery();
+    	    
     	    while(rs.next()) {
     			int orderID = rs.getInt("orderID");
     			int receiptID = rs.getInt("receiptID");
@@ -52,6 +53,36 @@ public class Order
     	return orders;
 	}
 	
+	public static String updateOrder(int orderID, String modification) throws Exception
+    {
+		Connection con = Main.getConnection();
+		
+        try {
+    		String sql = "UPDATE `Order` SET modification=? WHERE orderID=?";
+    		
+    		PreparedStatement stmt = con.prepareStatement(sql);
+    		stmt.setString(1, modification);
+    		stmt.setInt(2, orderID);
+    		
+    		stmt.executeUpdate();
+        } catch(Exception e){System.out.println(e);}
+    	
+    	return null;
+    }
+
+	public static void removeOrder(int orderID) throws Exception {
+		Connection con = Main.getConnection();
+		
+		try {
+        	String sql ="DELETE FROM `Order` WHERE orderID=?";
+        	
+        	PreparedStatement stmt = con.prepareStatement(sql);
+        	stmt.setInt(1, orderID);
+        	
+    		stmt.executeUpdate();
+    	} catch(Exception e){System.out.println(e);}
+	}
+	
 	/**
 	    * Getter method of name attribute
 	     * @param orderID The order ID that the attribute belongs to 
@@ -59,11 +90,13 @@ public class Order
 	     * @return the modification details
 	     * @throws Exception
 	*/
-	public static String getModification(int orderID, Connection c) throws Exception {
+	public static String getModification(int orderID) throws Exception {		
+		Connection c = Main.getConnection();
+		
 		try {
-    		PreparedStatement stmt = c.prepareStatement("SELECT modification FROM Order where orderID=?");
+    		PreparedStatement stmt = c.prepareStatement("SELECT modification FROM `Order` where orderID=?");
     		stmt.setInt(1,orderID);
-    		
+
        	    ResultSet rs = stmt.executeQuery();
        	    rs.next();
        	

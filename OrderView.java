@@ -35,6 +35,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
 
 public class OrderView extends JFrame {
 	private JTable table;
@@ -54,23 +57,20 @@ public class OrderView extends JFrame {
 			}
 		});
 	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public OrderView() {
-		//need orderid, modification, food name and price  
-		
-		
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 443, 292);
+		
 		Object[][] empty = {};
-		Object[][] data = {
-			    {1, "Burger", "No pickles", 3.99f},
-			    {2, "Fries", "Soggy", 0.99f}
-		};
 		String[] columnNames = {"ID", "Name","Modification","Price"};
-		table = new JTable(data, columnNames);
+		
+		DefaultTableModel model = new DefaultTableModel(empty, columnNames);
+		table = new JTable(model);
+		model.setRowCount(0);
 		
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getTableHeader().setReorderingAllowed(false);
@@ -84,7 +84,20 @@ public class OrderView extends JFrame {
 		
 		TableModel m = table.getModel();
 		table.clearSelection();
-		
+
+		try {
+			ArrayList<Order> orders = Order.getOrders();
+			
+			for(int i=0;i<orders.size();++i) {
+				Order o = orders.get(i);
+				Food f = Food.getFood(o.getFoodID());
+				
+				model.addRow(new Object[]{o.getOrderID(),f.getName(), o.getMod(), f.getPrice()});
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(10);
         columnModel.getColumn(1).setPreferredWidth(100);
@@ -96,8 +109,15 @@ public class OrderView extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				int row = table.getSelectedRow();
-				//DefaultTableModel model = (DefaultTableModel)table.getModel();
-				//m.removeRow(row);
+				int id = (int)table.getModel().getValueAt(row, 0);
+
+				model.removeRow(row);
+
+				try {	        		
+					Order.removeOrder(id);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -117,6 +137,13 @@ public class OrderView extends JFrame {
 		        if(yo != null)
 		        {
 		        	table.getModel().setValueAt(yo, row, 2);
+		        	int id = (int)table.getModel().getValueAt(row, 0);
+		        	
+		        	try {	        		
+						Order.updateOrder(id,yo);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 		        }
 			}
 		});
