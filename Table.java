@@ -13,7 +13,9 @@ public class Table {
 	private int yCoord;
 	private static Connection con;
 	
-	// Constructor maybe
+	/**
+     * Constructs object and connects to database
+     */
 	public Table() {
 		try{
 			String driver = "com.mysql.cj.jdbc.Driver";
@@ -26,6 +28,11 @@ public class Table {
 		} catch(Exception e){System.out.println(e);}		  
 	}
 	
+	/**
+     * Returns the number of rows (Tables) present in the database\
+     * @return the table row count
+     * @throws Exception
+     */
     public static int getNumRows() throws Exception 
     {
     	PreparedStatement stmt = con.prepareStatement("select count(*) from `table`");
@@ -38,7 +45,12 @@ public class Table {
     }
 	
 	// Getters:
-	// returns all the numbers of every table
+    
+    /**
+     * Returns all the numbers of every table
+     * @return Array of all table numbers
+     * @throws Exception
+     */
 	public int[] getAllTableNums() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT tableNumber FROM `table`");
@@ -58,7 +70,12 @@ public class Table {
 		return null;
 	}
 	
-	// returns the number of seats at this table
+	/**
+     * Returns the number of seats at this table
+     * @param int tableNum number of the table to check
+     * @return number of seats at a table
+     * @throws Exception
+     */
 	public int getSeat(int tableNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table` where tableNumber=?");
@@ -73,7 +90,11 @@ public class Table {
 		return seats;
 	}
 	
-	// returns all of the amount of seats of the 'table' table
+	/**
+     * Returns all of the amount of seats of the 'table' table
+     * @return array of integers for the number of seats at each table
+     * @throws Exception
+     */
 	public int[] getAllSeats() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table`");
@@ -92,8 +113,12 @@ public class Table {
 		catch (Exception e) {System.out.println(e);}
 		return null;
 	}
-	
-	// returns all of the occupations of every table
+
+	/**
+     * Returns all of the occupations of every table
+     * @return array of booleans for each table's occupation status
+     * @throws Exception
+     */
 	public boolean[] getAllOccupied() throws Exception{
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT occupied FROM `table`");
@@ -112,8 +137,12 @@ public class Table {
 		catch (Exception e) {System.out.println(e);}
 		return null;
 	}
-	
-	// returns all of the x-coordinates of where the table is on the UI
+
+	/**
+     * Returns all of the x-coordinates of where the table is on the UI
+     * @return array of integers for all table x coordinates
+     * @throws Exception
+     */
 	public int[] getAllXCoords() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT xCoord FROM `table`");
@@ -133,7 +162,11 @@ public class Table {
 		return null;
 	}
 	
-	// returns all of the y-coordinate of where the table is on the UI
+	/**
+     * Returns all of the y-coordinates of where the table is on the UI
+     * @return array of integers for all table y coordinates
+     * @throws Exception
+     */
 	public int[] getAllYCoords() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT yCoord FROM `table`");
@@ -155,7 +188,11 @@ public class Table {
 	
 	// Setters:
 	
-	// Create a new table with tableNumber key as parameter
+	/**
+     * Create a new table with tableNumber key as parameter
+     * @param table number to create
+     * @throws Exception
+     */
 	public void createTable(int tableNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO `table` (tableNumber, seats, occupied, xCoord, yCoord) VALUES (?, ?, ?, ?, ?)");
@@ -168,7 +205,11 @@ public class Table {
 		} catch (Exception e) {System.out.println(e);}
 	}
 	
-	// set the number of seats at the table
+	/**
+     * Set the number of seats at the table
+     * @param table number to edit
+     * @throws Exception
+     */
 	public void setSeat(int tableNum, int seatNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET seats=? WHERE tableNumber=?");
@@ -179,7 +220,11 @@ public class Table {
 		
 	}
 	
-	// sets whether the table is occupied
+	/**
+     * Sets whether the table is occupied
+     * @param table number to edit
+     * @throws Exception
+     */
 	public void setOccupied(int tableNum, boolean occupied) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET occupied=? WHERE tableNumber=?");
@@ -189,7 +234,11 @@ public class Table {
 		} catch (Exception e) {System.out.println(e);}
 	}
 	
-	// set the x-coordinate of where the table is on the UI
+	/**
+     * Set the x-coordinate of where the table is on the UI
+     * @param table number to edit
+     * @throws Exception
+     */
 	public void setXCoord(int tableNum, int x) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET xCoord=? WHERE tableNumber=?");
@@ -199,7 +248,11 @@ public class Table {
 		} catch (Exception e) {System.out.println(e);}
 	}
 	
-	// set the y-coordinate of where the table is on the UI
+	/**
+     * Set the y-coordinate of where the table is on the UI
+     * @param table number to edit
+     * @throws Exception
+     */
 	public void setYCoord(int tableNum, int y) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET yCoord=? WHERE tableNumber=?");
