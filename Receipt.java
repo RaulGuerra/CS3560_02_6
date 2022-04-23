@@ -80,7 +80,7 @@ public class Receipt {
 				} else {
 					sql += " AND ";
 				}
-				sql += "date = " + String.valueOf(date);
+				sql += "date = '" + String.valueOf(date) + "'";
 			} else if (dateChoice == 2) { // min/max
 				if (startWhere) {
 					startWhere = false;
@@ -88,7 +88,7 @@ public class Receipt {
 				} else {
 					sql += " AND ";
 				}
-				sql += "date BETWEEN " + String.valueOf(dateMin) + " AND " + String.valueOf(dateMax);
+				sql += "date BETWEEN '" + String.valueOf(dateMin) + "' AND '" + String.valueOf(dateMax) + "'";
 			}
 
 			// PAID
