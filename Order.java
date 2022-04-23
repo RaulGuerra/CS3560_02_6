@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  */
 
-public class Order 
+public class Order
 {
 	private int orderID;
 	private int checkID;
@@ -32,6 +32,11 @@ public class Order
 		this.modification = modification;
 	}
 	
+	/**
+	    * Gets all orders from the database
+	     * @return array of Order objects
+	     * @throws Exception
+	*/
 	public static ArrayList<Order> getOrders() throws Exception {
 		Connection c = Main.getConnection();
 		ArrayList<Order> orders = new ArrayList<Order>();
@@ -53,7 +58,14 @@ public class Order
     	return orders;
 	}
 	
-	public static String updateOrder(int orderID, String modification) throws Exception
+	/**
+	    * Updates Order object with a new modification
+	     * @param orderID. The orderID 
+	     * @param modification. The newly modified string
+	     * @return void
+	     * @throws Exception
+	*/
+	public static void updateOrder(int orderID, String modification) throws Exception
     {
 		Connection con = Main.getConnection();
 		
@@ -66,10 +78,14 @@ public class Order
     		
     		stmt.executeUpdate();
         } catch(Exception e){System.out.println(e);}
-    	
-    	return null;
     }
 
+	/**
+	    * Removes Order object referenced by ID
+	     * @param orderID. The orderID 
+	     * @return void
+	     * @throws Exception
+	*/
 	public static void removeOrder(int orderID) throws Exception {
 		Connection con = Main.getConnection();
 		
@@ -79,6 +95,28 @@ public class Order
         	PreparedStatement stmt = con.prepareStatement(sql);
         	stmt.setInt(1, orderID);
         	
+    		stmt.executeUpdate();
+    	} catch(Exception e){System.out.println(e);}
+	}
+	
+	/**
+	    * Inserts Order object to database
+	     * @param order. The order object 
+	     * @return void
+	     * @throws Exception
+	*/
+	public static void insertOrder(Order o) throws Exception {
+		Connection con = Main.getConnection();
+		
+		try {
+			String sql = "INSERT INTO Order (orderID, checkID, foodID, modification) VALUES (?, ?, ?, ?)";
+	    	//add respective values
+	    	PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, o.getOrderID());
+			stmt.setInt(2, o.getCheckID());
+			stmt.setInt(3, o.getFoodID());
+			stmt.setString(4, o.getMod());
+			
     		stmt.executeUpdate();
     	} catch(Exception e){System.out.println(e);}
 	}
