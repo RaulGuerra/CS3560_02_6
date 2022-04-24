@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -79,6 +80,7 @@ public class SearchReceipts extends JFrame {
 	int totalAmountMax;
 	Timestamp dateMin;
 	Timestamp dateMax;
+	
 
 	/**
 	 * Create the frame.
@@ -564,9 +566,24 @@ public class SearchReceipts extends JFrame {
 					dateMax = Timestamp.valueOf(txtDateMax.getText());
 				}
 				
-				receipt.getReceipts(checkIdChoice, tableNumberChoice, totalAmountChoice, dateChoice, paidChoice,
+			
+//				receipt.getReceipts(checkIdChoice, tableNumberChoice, totalAmountChoice, dateChoice, paidChoice,
+//						checkID, tableNumber, totalAmountChoice, date, paid, totalAmountMin, totalAmountMax, dateMin,
+//						dateMax);
+				
+				DefaultTableModel data = new DefaultTableModel(receipt.getReceipts(checkIdChoice, tableNumberChoice, totalAmountChoice, dateChoice, paidChoice,
 						checkID, tableNumber, totalAmountChoice, date, paid, totalAmountMin, totalAmountMax, dateMin,
-						dateMax);
+						dateMax), receiptColumns);
+				
+				table.setModel(data);
+				// format the table
+				table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+				table.getColumnModel().getColumn(0).setPreferredWidth(70);
+				table.getColumnModel().getColumn(1).setPreferredWidth(60);
+				table.getColumnModel().getColumn(2).setPreferredWidth(60);
+				table.getColumnModel().getColumn(3).setPreferredWidth(160);
+				table.setFillsViewportHeight(true); // fills in empty rows
+				
 			}
 		});
 		btnNewButton.setBackground(SystemColor.controlHighlight);
