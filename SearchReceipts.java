@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
 
 import javax.swing.JRadioButton;
@@ -80,12 +81,51 @@ public class SearchReceipts extends JFrame {
 	int totalAmountMax;
 	Timestamp dateMin;
 	Timestamp dateMax;
-	
+
+	// need previous so can refresh with same query when deleting
+	boolean prevCheckIdChoice = false;
+	boolean prevTableNumberChoice = false;
+	int prevTotalAmountChoice = 0;
+	int prevDateChoice = 0;
+	boolean prevPaidChoice = false;
+	int prevCheckID;
+	int prevTableNumber;
+	int prevTotalAmount;
+	Timestamp prevDate;
+	boolean prevPaid;
+	int prevTotalAmountMin;
+	int prevTotalAmountMax;
+	Timestamp prevDateMin;
+	Timestamp prevDateMax;
+
+	private void saveQueryParams() {
+		prevCheckIdChoice = checkIdChoice;
+		prevTableNumberChoice = tableNumberChoice;
+		prevTotalAmountChoice = totalAmountChoice;
+		prevDateChoice = dateChoice;
+		prevPaidChoice = paidChoice;
+		prevCheckID = checkID;
+		prevTableNumber = tableNumber;
+		prevTotalAmount = totalAmount;
+		prevDate = date;
+		prevPaid = paid;
+		prevTotalAmountMin = totalAmountMin;
+		prevTotalAmountMax = totalAmountMax;
+		prevDateMin = dateMin;
+		prevDateMax = dateMax;
+	}
+
+	private void formatTable() {
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		table.getColumnModel().getColumn(0).setPreferredWidth(70);
+		table.getColumnModel().getColumn(1).setPreferredWidth(60);
+		table.getColumnModel().getColumn(2).setPreferredWidth(60);
+		table.getColumnModel().getColumn(3).setPreferredWidth(160);
+	}
 
 	/**
 	 * Create the frame.
 	 */
-
 	public SearchReceipts() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 630, 670);
@@ -133,66 +173,7 @@ public class SearchReceipts extends JFrame {
 
 		String receiptColumns[] = { "Receipt ID", "Table #", "Total", "Date", "Paid" };
 
-		String receiptData[][] = { { "6251", "5", "985.21", "2016-06-23 09:07:21", "Paid" },
-				{ "1234", "5", "549.21", "2011-06-23 09:07:21", "Paid" },
-				{ "235", "4", "19.26", "2012-08-23 09:07:21", "UnPaid" },
-				{ "45634", "2", "200.20", "2010-06-23 09:07:21", "Paid" },
-				{ "2342", "5", "897.21", "2019-07-23 09:07:21", "Paid" },
-				{ "23211", "3", "894.23", "2018-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-				{ "231", "11", "10.58", "2017-06-23 09:07:21", "UnPaid" },
-
-		};
+		String receiptData[][] = receipt.getAllReceipts();
 
 		txtDateMax = new JTextField();
 		txtDateMax.setForeground(Color.GRAY);
@@ -317,7 +298,7 @@ public class SearchReceipts extends JFrame {
 		});
 
 		txtTotalAmount = new JTextField();
-		
+
 		txtTotalAmount.setForeground(Color.GRAY);
 		txtTotalAmount.addFocusListener(new FocusAdapter() {
 			@Override
@@ -357,7 +338,7 @@ public class SearchReceipts extends JFrame {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				
+
 				if (txtReceiptId.getText().isEmpty()) {
 					txtReceiptId.setForeground(Color.GRAY);
 					txtReceiptId.setText("is exactly");
@@ -546,7 +527,7 @@ public class SearchReceipts extends JFrame {
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (checkIdChoice) {
 					checkID = Integer.valueOf(txtReceiptId.getText());
 				}
@@ -562,28 +543,35 @@ public class SearchReceipts extends JFrame {
 				if (dateChoice == 1) {
 					date = Timestamp.valueOf(txtDate.getText());
 				} else if (dateChoice == 2) {
-					dateMin = Timestamp.valueOf(txtDateMin.getText());
-					dateMax = Timestamp.valueOf(txtDateMax.getText());
+					// datemin unspecified
+					if (txtDateMinHelper && !txtDateMaxHelper) {
+						dateMin = Timestamp.valueOf("1970-01-01 00:00:01");
+						dateMax = Timestamp.valueOf(txtDateMax.getText());
+						// datemax unspecified
+					} else if (!txtDateMinHelper && txtDateMaxHelper) {
+						dateMin = Timestamp.valueOf(txtDateMin.getText());
+						dateMax = Timestamp.valueOf("2038-01-19 03:14:07");
+						// both specified
+					} else {
+						dateMin = Timestamp.valueOf(txtDateMin.getText());
+						dateMax = Timestamp.valueOf(txtDateMax.getText());
+					}
 				}
-				
-			
+
 //				receipt.getReceipts(checkIdChoice, tableNumberChoice, totalAmountChoice, dateChoice, paidChoice,
 //						checkID, tableNumber, totalAmountChoice, date, paid, totalAmountMin, totalAmountMax, dateMin,
 //						dateMax);
-				
-				DefaultTableModel data = new DefaultTableModel(receipt.getReceipts(checkIdChoice, tableNumberChoice, totalAmountChoice, dateChoice, paidChoice,
-						checkID, tableNumber, totalAmountChoice, date, paid, totalAmountMin, totalAmountMax, dateMin,
-						dateMax), receiptColumns);
-				
+
+				DefaultTableModel data = new DefaultTableModel(receipt.getReceipts(checkIdChoice, tableNumberChoice,
+						totalAmountChoice, dateChoice, paidChoice, checkID, tableNumber, totalAmountChoice, date, paid,
+						totalAmountMin, totalAmountMax, dateMin, dateMax), receiptColumns);
+				saveQueryParams();
+
 				table.setModel(data);
 				// format the table
-				table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-				table.getColumnModel().getColumn(0).setPreferredWidth(70);
-				table.getColumnModel().getColumn(1).setPreferredWidth(60);
-				table.getColumnModel().getColumn(2).setPreferredWidth(60);
-				table.getColumnModel().getColumn(3).setPreferredWidth(160);
+				formatTable();
 				table.setFillsViewportHeight(true); // fills in empty rows
-				
+
 			}
 		});
 		btnNewButton.setBackground(SystemColor.controlHighlight);
@@ -601,6 +589,20 @@ public class SearchReceipts extends JFrame {
 		btnRemoveReceipt.setBackground(SystemColor.controlHighlight);
 		btnRemoveReceipt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int col = 0;
+				int row = table.getSelectedRow();
+				String value = table.getModel().getValueAt(row, col).toString();
+				receipt.removeReceipt(Integer.valueOf(value));
+
+				DefaultTableModel data = new DefaultTableModel(
+						receipt.getReceipts(prevCheckIdChoice, prevTableNumberChoice, prevTotalAmountChoice,
+								prevDateChoice, prevPaidChoice, prevCheckID, prevTableNumber, prevTotalAmountChoice,
+								prevDate, prevPaid, prevTotalAmountMin, prevTotalAmountMax, prevDateMin, prevDateMax),
+						receiptColumns);
+
+				table.setModel(data);
+				formatTable();
+
 			}
 		});
 		btnRemoveReceipt.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -652,11 +654,8 @@ public class SearchReceipts extends JFrame {
 		contentPane.add(scrollPane);
 
 		table = new JTable(receiptData, receiptColumns);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		table.getColumnModel().getColumn(0).setPreferredWidth(70);
-		table.getColumnModel().getColumn(1).setPreferredWidth(60);
-		table.getColumnModel().getColumn(2).setPreferredWidth(60);
-		table.getColumnModel().getColumn(3).setPreferredWidth(160);
+		formatTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFillsViewportHeight(true); // fills in empty rows
 
 		table.setDefaultEditor(Object.class, null); // makes cells uneditable
