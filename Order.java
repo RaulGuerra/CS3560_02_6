@@ -100,6 +100,25 @@ public class Order
 	}
 	
 	/**
+	    * Removes Order objects that are part of checkID
+	     * @param checkID. The checkID 
+	     * @return void
+	     * @throws Exception
+	*/
+	public static void removeCheckOrders(int checkID) throws Exception {
+		Connection con = Main.getConnection();
+		
+		try {
+        	String sql ="DELETE FROM `Order` WHERE receiptID=?";
+        	
+        	PreparedStatement stmt = con.prepareStatement(sql);
+        	stmt.setInt(1, checkID);
+        	
+    		stmt.executeUpdate();
+    	} catch(Exception e){System.out.println(e);}
+	}
+	
+	/**
 	    * Inserts Order object to database
 	     * @param order. The order object 
 	     * @return void
