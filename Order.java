@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 /**
  * 
- * @author Christopher
+ * @author Christopher, Abhinav Neelam
  * class name:  Order
  * date: 3/17/2022
  * class section: CS 3560.02
@@ -43,6 +43,32 @@ public class Order
 
 		try {
     		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order`");
+    	    ResultSet rs = stmt.executeQuery();
+    	    
+    	    while(rs.next()) {
+    			int orderID = rs.getInt("orderID");
+    			int receiptID = rs.getInt("receiptID");
+    			int foodID = rs.getInt("foodID");
+    			String modification = rs.getString("modification");
+    			
+    			orders.add(new Order(orderID, receiptID, foodID, modification));
+    	    }
+    	}catch(Exception e){System.out.println(e);}
+		
+    	return orders;
+	}
+	
+	/**
+	    * Gets all orders which belong to table
+	     * @return array of Order objects
+	     * @throws Exception
+	*/
+	public static ArrayList<Order> getOrdersFromTable(int tableNum) throws Exception {
+		Connection c = Main.getConnection();
+		ArrayList<Order> orders = new ArrayList<Order>();
+
+		try {
+    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ANY (SELECT checkID FROM `receipt` WHERE tableNumber=2)");
     	    ResultSet rs = stmt.executeQuery();
     	    
     	    while(rs.next()) {

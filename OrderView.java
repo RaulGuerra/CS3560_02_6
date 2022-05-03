@@ -65,6 +65,8 @@ public class OrderView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 443, 292);
 		
+		int tableNumber=1;
+		
 		Object[][] empty = {};
 		String[] columnNames = {"ID", "Name","Modification","Price"};
 		
@@ -86,7 +88,7 @@ public class OrderView extends JFrame {
 		table.clearSelection();
 
 		try {
-			ArrayList<Order> orders = Order.getOrders();
+			ArrayList<Order> orders = Order.getOrdersFromTable(tableNumber);
 			
 			for(int i=0;i<orders.size();++i) {
 				Order o = orders.get(i);
