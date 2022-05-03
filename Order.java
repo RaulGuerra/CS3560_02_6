@@ -68,7 +68,8 @@ public class Order
 		ArrayList<Order> orders = new ArrayList<Order>();
 
 		try {
-    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ANY (SELECT checkID FROM `receipt` WHERE tableNumber=2)");
+    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ANY (SELECT checkID FROM `receipt` WHERE tableNumber=?)");
+    		stmt.setInt(1, tableNum);
     	    ResultSet rs = stmt.executeQuery();
     	    
     	    while(rs.next()) {
