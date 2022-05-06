@@ -23,6 +23,32 @@ public class Receipt {
 		}
 	}
 
+	public String[][] getAllReceipts() {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Receipt");
+
+			int rows = getNumRows(stmt);
+			int cols = 5;
+			String[][] receiptData = new String[rows][cols];
+
+			ResultSet rs = stmt.executeQuery();
+
+			int i = 0;
+			while (rs.next()) {
+				receiptData[i][0] = String.valueOf(rs.getInt("checkID"));
+				receiptData[i][1] = String.valueOf(rs.getInt("tableNumber"));
+				receiptData[i][2] = String.valueOf(rs.getString("date"));
+				receiptData[i][3] = String.valueOf(rs.getBoolean("paid"));
+				i++;
+			}
+
+			return receiptData;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+
 	public String[][] getReceipts(boolean checkIdChoice, boolean tableNumberChoice, int totalAmountChoice,
 			int dateChoice, boolean paidChoice, int checkID, int tableNumber, double totalAmount, Timestamp date,
 			boolean paid, double totalAmountMin, double totalAmountMax, Timestamp dateMin, Timestamp dateMax) {
@@ -70,7 +96,6 @@ public class Receipt {
 				sql += "totalAmount BETWEEN " + String.valueOf(totalAmountMin) + " AND "
 						+ String.valueOf(totalAmountMax);
 			}
-			
 
 			// DATE
 			if (dateChoice == 1) { // is exactly
@@ -118,19 +143,18 @@ public class Receipt {
 			int rows = getNumRows(stmt);
 			int cols = 5;
 			String[][] receiptData = new String[rows][cols];
-			
+
 			ResultSet rs = stmt.executeQuery();
-			
+
 			int i = 0;
-			while(rs.next()) {
+			while (rs.next()) {
 				receiptData[i][0] = String.valueOf(rs.getInt("checkID"));
 				receiptData[i][1] = String.valueOf(rs.getInt("tableNumber"));
 				receiptData[i][2] = String.valueOf(rs.getString("date"));
 				receiptData[i][3] = String.valueOf(rs.getBoolean("paid"));
 				i++;
 			}
-			
-			
+
 			return receiptData;
 		} catch (Exception e) {
 			System.out.println(e);
@@ -173,6 +197,17 @@ public class Receipt {
 			System.out.println(e);
 		}
 	}
+	
+	public void removeReceipts(int tableNumber) {
+		try {
+			String sql = "DELETE FROM Receipt WHERE tableNumber=?";
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, tableNumber);
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 
 	public void updateReceipt(int checkID, boolean paymentStatus) {
 		try {
@@ -192,10 +227,9 @@ public class Receipt {
 //		receipt.getReceipts(false, true, 1, 0, false, 1465, 6, 4.64, null, false, 0, 0, null, null);
 //		
 //		String[][] arr = receipt.getReceipts(false, false, 0, 0, false, 0, 0, 0, null, true, 0, 0, null, null);
-//		print2DArray(arr);
-		receipt.updateReceipt(8, false);
+//		print2DArray(arr);.
 	}
-	
+
 	public static void print2DArray(String[][] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr[0].length; j++) {
