@@ -579,7 +579,7 @@ public class SearchReceipts extends JFrame {
 		btnNewButton.setBounds(25, 516, 180, 40);
 		contentPane.add(btnNewButton);
 
-		JButton btnUpdateReceipt = new JButton("Update Receipt");
+		JButton btnUpdateReceipt = new JButton("Return to Menu");
 		btnUpdateReceipt.setBackground(SystemColor.controlHighlight);
 		btnUpdateReceipt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnUpdateReceipt.setBounds(405, 516, 180, 40);
@@ -615,7 +615,11 @@ public class SearchReceipts extends JFrame {
 		btnTableMenu.setBounds(405, 567, 180, 40);
 		contentPane.add(btnTableMenu);
 
-		JButton btnNewReceipt = new JButton("New Receipt");
+		JButton btnNewReceipt = new JButton("Update Receipt");
+		btnNewReceipt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnNewReceipt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnNewReceipt.setBackground(SystemColor.controlHighlight);
 		btnNewReceipt.setBounds(215, 516, 180, 40);

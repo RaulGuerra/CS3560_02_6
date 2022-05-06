@@ -216,7 +216,6 @@ public class Receipt {
 			stmt.setBoolean(1, paymentStatus); // not sure if second parameter should be true or false
 			stmt.setInt(2, checkID);
 			stmt.executeUpdate();
-
 		} catch (Exception e) {
 			System.out.println(e);
 		}
