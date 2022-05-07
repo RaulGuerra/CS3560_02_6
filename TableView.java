@@ -21,12 +21,14 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.Color;
+import java.awt.Component;
 
 public class TableView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private Point startPoint;
 	private int count = 1;
+	private Table tab = new Table();
 
 	/**
 	 * Launch the application.
@@ -43,8 +45,11 @@ public class TableView extends JDialog {
 		}
 	}
 
+	
+	
 	/**
 	 * Create the dialog.
+	 * @throws Exception 
 	 */
 	public TableView() {
 		setModal(true);
@@ -58,6 +63,8 @@ public class TableView extends JDialog {
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Table Layout", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
+		setButtons(panel);
+		
 		JLabel lblNewLabel = new JLabel("Add a new table:");
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -67,8 +74,6 @@ public class TableView extends JDialog {
 				jbtn.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						// MyDialog dialog = new MyDialog();
-						// dialog.setVisible(true);
 						dispose();
 						ReceiptPage rp = new ReceiptPage(1);
 						rp.setVisible(true);
@@ -80,6 +85,18 @@ public class TableView extends JDialog {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						startPoint = null;
+						String num = ((JButton) e.getComponent()).getActionCommand();
+						num = num.substring(6);
+						try {
+							tab.setXCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getX());
+							tab.setYCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getY());
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 				});
 				jbtn.addMouseMotionListener(new MouseMotionAdapter() {
@@ -102,6 +119,14 @@ public class TableView extends JDialog {
 				panel.add(jbtn);
 				panel.repaint();
 				// panel.revalidate();
+				
+				try {
+					tab.createTable(count);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				count++;
 			}
 		});
@@ -113,13 +138,27 @@ public class TableView extends JDialog {
 										"Delete Table",
 										JOptionPane.INFORMATION_MESSAGE);
 				if (s == null)
-					System.out.println("Cancelled");
+					;//System.out.println("Cancelled");
 				else if (s.length() == 0)
-					System.out.println("No string entered.\n");
-				else if (Integer.parseInt(s) < 5)
-					JOptionPane.showMessageDialog(null, "\"" + s + "\" is not a valid table num");
-				else
-					System.out.println("Valid\n");
+					JOptionPane.showMessageDialog(null, "Please enter a number before clicking \"OK\"");
+				else {
+					Component[] allComp = panel.getComponents();
+					boolean validTable = false;
+					// System.out.println(((JButton)allComp[Integer.parseInt(s) - 1]).getActionCommand().substring(6));
+					
+					
+					for (int i = 0; i < allComp.length; i++) {
+						if (((JButton) allComp[i]).getActionCommand().substring(6).equals(s)) {
+							validTable = true;
+							break;
+						}
+					}
+					
+					if (validTable)
+						System.out.println("Valid\n");
+					else
+						JOptionPane.showMessageDialog(null, "Please enter a valid table number.");
+				}
 			}
 		});
 		JLabel lblNewLabel_2 = new JLabel("Update a table:");
@@ -188,6 +227,7 @@ public class TableView extends JDialog {
 						.addGap(11)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)))
 		);
+		panel.setLayout(null);
 		contentPanel.setLayout(gl_contentPanel);
 		{
 			JPanel buttonPane = new JPanel();
@@ -203,6 +243,104 @@ public class TableView extends JDialog {
 				returnButton.setActionCommand("Cancel");
 				buttonPane.add(returnButton);
 			}
+		}
+	}
+	
+	public void setButtons(JPanel pan) {
+		int[] allX = null;
+		int[] allY = null;
+		boolean[] allOcc = null;
+		int[] allTabNums = null;
+		
+		try {
+			allX = tab.getAllXCoords();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			allY = tab.getAllYCoords();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			allOcc = tab.getAllOccupied();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			allTabNums = tab.getAllTableNums();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		// This should be wrapped in an if statement to check if there are no tables and do
+		// nothing if there are no tables.
+		//--------------------------------------------------------------------------------
+		//								REMEBER TO ADD THE IF STATEMENT!!!!!!!!!
+		//--------------------------------------------------------------------------------
+		try {
+			for (int i = 0; i < tab.getNumRows(); i++) {
+				JButton jbtn = new JButton("Table " + String.valueOf(allTabNums[i]));
+				jbtn.setBounds(allX[i], allY[i], 80, 23);
+				if (allOcc[i])
+					jbtn.setBackground(new Color(250, 128, 114));
+				else
+					jbtn.setBackground(new Color(144, 238, 144));
+				jbtn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						dispose();
+						ReceiptPage rp = new ReceiptPage(1);
+						rp.setVisible(true);
+					}
+					@Override
+					public void mousePressed(MouseEvent e) {
+						startPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), e.getComponent().getParent());
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						startPoint = null;
+						String num = ((JButton) e.getComponent()).getActionCommand();
+						num = num.substring(6);
+						try {
+							tab.setXCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getX());
+							tab.setYCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getY());
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				jbtn.addMouseMotionListener(new MouseMotionAdapter() {
+					@Override
+					public void mouseDragged(MouseEvent e) {
+						Point location = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), e.getComponent().getParent());
+						if (e.getComponent().getParent().getBounds().contains(location)) {
+							Point newLocation = e.getComponent().getLocation();
+							newLocation.translate(location.x - startPoint.x, location.y - startPoint.y);
+							newLocation.x = Math.max(newLocation.x, 0);
+							newLocation.y = Math.max(newLocation.y, 0);
+							newLocation.x = Math.min(newLocation.x, e.getComponent().getParent().getWidth() - e.getComponent().getWidth());
+							newLocation.y = Math.min(newLocation.y, e.getComponent().getParent().getHeight() - e.getComponent().getHeight());
+							e.getComponent().setLocation(newLocation);
+							startPoint = location;
+						}
+					}
+				});
+				
+				pan.add(jbtn);
+			}
+			count = allTabNums[tab.getNumRows() - 1] + 1;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
