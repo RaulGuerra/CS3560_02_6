@@ -51,7 +51,7 @@ public class Table {
      * @return Array of all table numbers
      * @throws Exception
      */
-	public int[] getAllTableNums() throws Exception {
+	public static int[] getAllTableNums() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT tableNumber FROM `table`");
 			
@@ -95,7 +95,7 @@ public class Table {
      * @return array of integers for the number of seats at each table
      * @throws Exception
      */
-	public int[] getAllSeats() throws Exception {
+	public static int[] getAllSeats() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table`");
 			
@@ -119,7 +119,7 @@ public class Table {
      * @return array of booleans for each table's occupation status
      * @throws Exception
      */
-	public boolean[] getAllOccupied() throws Exception{
+	public static boolean[] getAllOccupied() throws Exception{
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT occupied FROM `table`");
 			
@@ -143,7 +143,7 @@ public class Table {
      * @return array of integers for all table x coordinates
      * @throws Exception
      */
-	public int[] getAllXCoords() throws Exception {
+	public static int[] getAllXCoords() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT xCoord FROM `table`");
 			
@@ -167,7 +167,7 @@ public class Table {
      * @return array of integers for all table y coordinates
      * @throws Exception
      */
-	public int[] getAllYCoords() throws Exception {
+	public static int[] getAllYCoords() throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT yCoord FROM `table`");
 			
@@ -193,7 +193,7 @@ public class Table {
      * @param table number to create
      * @throws Exception
      */
-	public void createTable(int tableNum) throws Exception {
+	public static void createTable(int tableNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO `table` (tableNumber, seats, occupied, xCoord, yCoord) VALUES (?, ?, ?, ?, ?)");
 			stmt.setInt(1, tableNum);
@@ -210,7 +210,7 @@ public class Table {
      * @param table number to edit
      * @throws Exception
      */
-	public void setSeat(int tableNum, int seatNum) throws Exception {
+	public static void setSeat(int tableNum, int seatNum) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET seats=? WHERE tableNumber=?");
 			stmt.setInt(1, seatNum);
@@ -225,7 +225,7 @@ public class Table {
      * @param table number to edit
      * @throws Exception
      */
-	public void setOccupied(int tableNum, boolean occupied) throws Exception {
+	public static void setOccupied(int tableNum, boolean occupied) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET occupied=? WHERE tableNumber=?");
 			stmt.setBoolean(1, occupied);
@@ -239,7 +239,7 @@ public class Table {
      * @param table number to edit
      * @throws Exception
      */
-	public void setXCoord(int tableNum, int x) throws Exception {
+	public static void setXCoord(int tableNum, int x) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET xCoord=? WHERE tableNumber=?");
 			stmt.setInt(1, x);
@@ -253,7 +253,7 @@ public class Table {
      * @param table number to edit
      * @throws Exception
      */
-	public void setYCoord(int tableNum, int y) throws Exception {
+	public static void setYCoord(int tableNum, int y) throws Exception {
 		try {
 			PreparedStatement stmt = con.prepareStatement("UPDATE `table` SET yCoord=? WHERE tableNumber=?");
 			stmt.setInt(1, y);
