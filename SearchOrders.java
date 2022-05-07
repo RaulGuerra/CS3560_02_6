@@ -92,9 +92,11 @@ public class SearchOrders extends JDialog {
 	private void formatTable() {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		table.getColumnModel().getColumn(0).setPreferredWidth(70);
-		table.getColumnModel().getColumn(1).setPreferredWidth(60);
-		table.getColumnModel().getColumn(2).setPreferredWidth(60);
+		table.getColumnModel().getColumn(1).setPreferredWidth(70);
+		table.getColumnModel().getColumn(2).setPreferredWidth(70);
 		table.getColumnModel().getColumn(3).setPreferredWidth(160);
+		table.getColumnModel().getColumn(4).setPreferredWidth(160);
+		table.getColumnModel().getColumn(5).setPreferredWidth(70);
 	}
 
 	//Create the frame.
@@ -102,7 +104,7 @@ public class SearchOrders extends JDialog {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 630, 600);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -134,9 +136,9 @@ public class SearchOrders extends JDialog {
 			}
 		});
 
-		String orderColumns[] = { "Order ID", "Food ID", "Receipt ID", "Modification"};
+		String orderColumns[] = { "Order ID", "Food ID", "Receipt ID", "Name", "Modification", "Price ($)"};
 		
-		String orderData[][] = Order.getOrdersArray();
+		String orderData[][] = Order.getOrdersView();
 		
 		
 		
@@ -352,7 +354,7 @@ public class SearchOrders extends JDialog {
 
 				DefaultTableModel data = null;
 				try {
-					data = new DefaultTableModel(Order.getOrdersArray(), orderColumns);
+					data = new DefaultTableModel(Order.getOrdersView(), orderColumns);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -369,7 +371,7 @@ public class SearchOrders extends JDialog {
 		});
 		btnSearch.setBackground(SystemColor.controlHighlight);
 		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSearch.setBounds(25, 516, 130, 40);
+		btnSearch.setBounds(25, 516, 170, 40);
 		contentPane.add(btnSearch);
 
 		JButton btnReturn = new JButton("Return");
@@ -380,7 +382,7 @@ public class SearchOrders extends JDialog {
 		});
 		btnReturn.setBackground(SystemColor.controlHighlight);
 		btnReturn.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnReturn.setBounds(451, 516, 130, 40);
+		btnReturn.setBounds(618, 516, 170, 40);
 		contentPane.add(btnReturn);
 
 		JButton btnRemove = new JButton("Remove Order");
@@ -396,7 +398,7 @@ public class SearchOrders extends JDialog {
 
 				DefaultTableModel data = null;
 				try {
-					data = new DefaultTableModel(Order.getOrdersArray(), orderColumns);
+					data = new DefaultTableModel(Order.getOrdersView(), orderColumns);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -409,7 +411,7 @@ public class SearchOrders extends JDialog {
 			}
 		});
 		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnRemove.setBounds(309, 516, 130, 40);
+		btnRemove.setBounds(423, 516, 170, 40);
 		contentPane.add(btnRemove);
 
 		// Radial Groups
@@ -433,7 +435,7 @@ public class SearchOrders extends JDialog {
 		rdbtnModificationAny.setSelected(true);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(205, 25, 380, 484);
+		scrollPane.setBounds(205, 25, 583, 484);
 		contentPane.add(scrollPane);
 
 		table = new JTable(orderData, orderColumns);
@@ -447,7 +449,7 @@ public class SearchOrders extends JDialog {
 		JButton btnEdit = new JButton("Edit Orders");
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEdit.setBackground(SystemColor.controlHighlight);
-		btnEdit.setBounds(167, 516, 130, 40);
+		btnEdit.setBounds(225, 516, 170, 40);
 		contentPane.add(btnEdit);
 
 	}

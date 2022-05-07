@@ -63,14 +63,14 @@ public class Order
 	     * @return 2D array of order data
 	     * @throws Exception
 	*/
-	public static String[][] getOrdersArray() throws Exception {
+	public static String[][] getOrdersView() throws Exception {
 		String[][] ordersFallback = null;
 		Connection c = Main.getConnection();
 		try {
-			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = stmt.executeQuery();
 			rs.last();
-			String[][] orders = new String[rs.getRow()][4];
+			String[][] orders = new String[rs.getRow()][6];
 			rs.first();
 			int arrayRow = 0;
 			while(rs.next()) {
@@ -78,7 +78,39 @@ public class Order
 				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
 				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
 				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
-				orders[arrayRow][3] = rs.getString("modification");
+				orders[arrayRow][3] = rs.getString("name");
+				orders[arrayRow][4] = rs.getString("modification");
+				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+			}
+			ordersFallback = orders;
+		}
+		catch(Exception e){System.out.println(e);}
+		return ordersFallback;
+	}
+	
+	/**
+	    * Gets specific orders from the OrderPrice view and return them in a 2D Array
+	     * @return 2D array of order data
+	     * @throws Exception
+	*/
+	public static String[][] searchOrdersView() throws Exception {
+		String[][] ordersFallback = null;
+		Connection c = Main.getConnection();
+		try {
+			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery();
+			rs.last();
+			String[][] orders = new String[rs.getRow()][6];
+			rs.first();
+			int arrayRow = 0;
+			while(rs.next()) {
+				arrayRow++;
+				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+				orders[arrayRow][3] = rs.getString("name");
+				orders[arrayRow][4] = rs.getString("modification");
+				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
 			}
 			ordersFallback = orders;
 		}
