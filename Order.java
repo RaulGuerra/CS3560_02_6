@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 /**
  * 
- * @author Christopher, Abhinav Neelam
+ * @author Christopher, Abhinav Neelam, Eric Wagner-Roberts
  * class name:  Order
  * date: 3/17/2022
  * class section: CS 3560.02
@@ -56,6 +56,34 @@ public class Order
     	}catch(Exception e){System.out.println(e);}
 		
     	return orders;
+	}
+	
+	/**
+	    * Gets all orders from the database and return them in a 2D Array
+	     * @return 2D array of order data
+	     * @throws Exception
+	*/
+	public static String[][] getOrdersArray() throws Exception {
+		String[][] ordersFallback = null;
+		Connection c = Main.getConnection();
+		try {
+			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery();
+			rs.last();
+			String[][] orders = new String[rs.getRow()][4];
+			rs.first();
+			int arrayRow = 0;
+			while(rs.next()) {
+				arrayRow++;
+				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+				orders[arrayRow][3] = rs.getString("modification");
+			}
+			ordersFallback = orders;
+		}
+		catch(Exception e){System.out.println(e);}
+		return ordersFallback;
 	}
 	
 	/**
