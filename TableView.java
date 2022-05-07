@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
@@ -30,9 +31,11 @@ public class TableView extends JDialog {
 	/**
 	 * Launch the application.
 	 */
+	
+	private static TableView dialog;
 	public static void main(String[] args) {
 		try {
-			TableView dialog = new TableView();
+			dialog = new TableView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -66,7 +69,9 @@ public class TableView extends JDialog {
 					public void mouseClicked(MouseEvent e) {
 						// MyDialog dialog = new MyDialog();
 						// dialog.setVisible(true);
-						
+						dispose();
+						ReceiptPage rp = new ReceiptPage(1);
+						rp.setVisible(true);
 					}
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -138,41 +143,7 @@ public class TableView extends JDialog {
 				}
 			}
 		});
-		JButton btnNewButton_3 = new JButton("Table 1");
-		btnNewButton_3.setBackground(new Color(144, 238, 144));
-		btnNewButton_3.setBounds(145, 27, 80, 23);
 		
-		JButton btnNewButton_4 = new JButton("Table 2");
-		btnNewButton_4.setBackground(new Color(250, 128, 114));
-		btnNewButton_4.setBounds(16, 68, 80, 23);
-		
-		JButton btnNewButton_5 = new JButton("Table 3");
-		btnNewButton_5.setBackground(new Color(144, 238, 144));
-		btnNewButton_5.setBounds(16, 109, 80, 23);
-		
-		JButton btnNewButton_6 = new JButton("Table 4");
-		btnNewButton_6.setBackground(new Color(144, 238, 144));
-		btnNewButton_6.setBounds(16, 150, 80, 23);
-		
-		JButton btnNewButton_7 = new JButton("Table 5");
-		btnNewButton_7.setBackground(new Color(250, 128, 114));
-		btnNewButton_7.setBounds(145, 68, 80, 23);
-		
-		JButton btnNewButton_8 = new JButton("Table 6");
-		btnNewButton_8.setBackground(new Color(250, 128, 114));
-		btnNewButton_8.setBounds(145, 109, 80, 23);
-		
-		JButton btnNewButton_9 = new JButton("Table 7");
-		btnNewButton_9.setBackground(new Color(144, 238, 144));
-		btnNewButton_9.setBounds(145, 150, 80, 23);
-		panel.setLayout(null);
-		panel.add(btnNewButton_4);
-		panel.add(btnNewButton_5);
-		panel.add(btnNewButton_6);
-		panel.add(btnNewButton_7);
-		panel.add(btnNewButton_8);
-		panel.add(btnNewButton_9);
-		panel.add(btnNewButton_3);
 		
 		JLabel lblNewLabel_3 = new JLabel("Number of Seats: ");
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
@@ -226,7 +197,7 @@ public class TableView extends JDialog {
 				JButton returnButton = new JButton("Return");
 				returnButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
+						dispose();
 					}
 				});
 				returnButton.setActionCommand("Cancel");

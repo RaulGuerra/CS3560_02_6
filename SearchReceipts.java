@@ -20,12 +20,15 @@ import java.sql.Timestamp;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
+import java.awt.Dialog.ModalityType;
 import java.awt.Color;
 
-public class SearchReceipts extends JFrame {
+public class SearchReceipts extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField txtReceiptId;
@@ -127,12 +130,15 @@ public class SearchReceipts extends JFrame {
 	 * Create the frame.
 	 */
 	public SearchReceipts() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 630, 670);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		JRadioButton rdbtnReceiptIdExactly = new JRadioButton("");
 		rdbtnReceiptIdExactly.addActionListener(new ActionListener() {
@@ -580,6 +586,11 @@ public class SearchReceipts extends JFrame {
 		contentPane.add(btnNewButton);
 
 		JButton btnUpdateReceipt = new JButton("Return to Menu");
+		btnUpdateReceipt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnUpdateReceipt.setBackground(SystemColor.controlHighlight);
 		btnUpdateReceipt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnUpdateReceipt.setBounds(405, 516, 180, 40);
@@ -610,6 +621,13 @@ public class SearchReceipts extends JFrame {
 		contentPane.add(btnRemoveReceipt);
 
 		JButton btnTableMenu = new JButton("Return to Tables");
+		btnTableMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				TableView tv = new TableView();
+				tv.setVisible(true);
+			}
+		});
 		btnTableMenu.setBackground(SystemColor.controlHighlight);
 		btnTableMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnTableMenu.setBounds(405, 567, 180, 40);
