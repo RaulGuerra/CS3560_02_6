@@ -78,12 +78,14 @@ public class Table {
      */
 	public int getSeat(int tableNum) throws Exception {
 		try {
-			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table` where tableNumber=?");
+			PreparedStatement stmt = con.prepareStatement("SELECT seats FROM `table` WHERE tableNumber=?");
 			stmt.setInt(1, tableNum);
 			
 			int seats = 0;
 			ResultSet rs = stmt.executeQuery();
-			seats = rs.getInt("seats");
+			while (rs.next()) {
+				seats = rs.getInt("seats");
+			}
 			return seats;
 		}
 		catch (Exception e) {System.out.println(e);}
@@ -201,6 +203,19 @@ public class Table {
 			stmt.setBoolean(3, false);
 			stmt.setInt(4, 0);
 			stmt.setInt(5, 0);
+			stmt.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
+	}
+	
+	/**
+	 * Deletes the specified table using the table number
+	 * @param tableNum
+	 * @throws Exception
+	 */
+	public static void deleteTable(int tableNum) throws Exception {
+		try {
+			PreparedStatement stmt = con.prepareStatement("DELETE FROM `table` WHERE tableNumber=?");
+			stmt.setInt(1, tableNum);
 			stmt.executeUpdate();
 		} catch (Exception e) {System.out.println(e);}
 	}
