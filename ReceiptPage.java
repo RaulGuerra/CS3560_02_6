@@ -11,7 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-
+import javax.swing.JDialog;
 import javax.swing.SwingConstants;
 
 import java.awt.SystemColor;
@@ -19,20 +19,25 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class ReceiptPage extends JFrame {
+public class ReceiptPage extends JDialog {
 
 	private JPanel contentPane;
 	private JTable table;
+	private int tableNumber;
 
 	/**
 	 * Launch the application.
 	 */
+	private static ReceiptPage frame;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ReceiptPage frame = new ReceiptPage();
+					frame = new ReceiptPage(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,11 +45,12 @@ public class ReceiptPage extends JFrame {
 			}
 		});
 	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public ReceiptPage() {
+	public ReceiptPage(int tableNumber) {
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		boolean paid = false;
 		
 		double salesTax = 0.0725;
@@ -70,8 +76,10 @@ public class ReceiptPage extends JFrame {
 
 		};
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 520, 570);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 520, 581);
+		setLocationRelativeTo(null);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -229,15 +237,31 @@ public class ReceiptPage extends JFrame {
 		contentPane.add(lblNewLabel_4_2_2);
 
 		JButton btnSearchReceipts = new JButton("Search Receipts");
+		btnSearchReceipts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				SearchReceipts sr = new SearchReceipts();
+				sr.setVisible(true);
+
+			}
+			
+		});
 		btnSearchReceipts.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnSearchReceipts.setBackground(SystemColor.controlHighlight);
-		btnSearchReceipts.setBounds(295, 381, 180, 40);
+		btnSearchReceipts.setBounds(295, 432, 180, 40);
 		contentPane.add(btnSearchReceipts);
 
 		JButton btnReturnToTables = new JButton("Return to Tables");
+		btnReturnToTables.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				TableView tv = new TableView();
+				tv.setVisible(true);
+			}
+		});
 		btnReturnToTables.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnReturnToTables.setBackground(SystemColor.controlHighlight);
-		btnReturnToTables.setBounds(295, 432, 180, 40);
+		btnReturnToTables.setBounds(295, 483, 180, 40);
 		contentPane.add(btnReturnToTables);
 
 		JButton btnRemoveReceipt = new JButton("Remove Receipt");
@@ -268,6 +292,12 @@ public class ReceiptPage extends JFrame {
 		btnEditOrders.setBackground(SystemColor.controlHighlight);
 		btnEditOrders.setBounds(295, 228, 180, 40);
 		contentPane.add(btnEditOrders);
+		
+		JButton btnOpenTable = new JButton("Open Table");
+		btnOpenTable.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnOpenTable.setBackground(SystemColor.controlHighlight);
+		btnOpenTable.setBounds(295, 381, 180, 40);
+		contentPane.add(btnOpenTable);
 
 	}
 }

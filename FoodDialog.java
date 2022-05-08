@@ -55,7 +55,7 @@ public class FoodDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+		setLocationRelativeTo(null);
 		JScrollPane scrollPane = new JScrollPane();
 		
 		//Gets food names to be shown through JList 

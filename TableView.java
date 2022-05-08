@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
@@ -20,19 +21,24 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.Color;
+import java.awt.Component;
 
 public class TableView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private Point startPoint;
 	private int count = 1;
+	private Table tab = new Table();
+	private JLabel lblNewLabel_3;
 
 	/**
 	 * Launch the application.
 	 */
+	
+	private static TableView dialog;
 	public static void main(String[] args) {
 		try {
-			TableView dialog = new TableView();
+			dialog = new TableView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -40,13 +46,16 @@ public class TableView extends JDialog {
 		}
 	}
 
+	
+	
 	/**
 	 * Create the dialog.
+	 * @throws Exception 
 	 */
 	public TableView() {
 		setModal(true);
 		setTitle("Table Viewer");
-		setBounds(100, 100, 507, 339);
+		setBounds(100, 100, 558, 339);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,7 +64,10 @@ public class TableView extends JDialog {
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Table Layout", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
+		setButtons(panel);
+		
 		JLabel lblNewLabel = new JLabel("Add a new table:");
+		lblNewLabel_3 = new JLabel("Number of Seats at Table :");
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,9 +76,9 @@ public class TableView extends JDialog {
 				jbtn.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						// MyDialog dialog = new MyDialog();
-						// dialog.setVisible(true);
-						
+						dispose();
+						ReceiptPage rp = new ReceiptPage(Integer.parseInt(((JButton) e.getComponent()).getActionCommand().substring(6)));
+						rp.setVisible(true);
 					}
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -75,6 +87,33 @@ public class TableView extends JDialog {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						startPoint = null;
+						String num = ((JButton) e.getComponent()).getActionCommand();
+						num = num.substring(6);
+						try {
+							tab.setXCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getX());
+							tab.setYCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getY());
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						int tabNum = Integer.parseInt(((JButton) e.getComponent()).getActionCommand().substring(6));
+						
+						try {
+							lblNewLabel_3.setText("Number of Seats at Table " + tabNum + ": "+ String.valueOf(tab.getSeat(tabNum)));
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} 
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						lblNewLabel_3.setText("Number of Seats at Table :");
 					}
 				});
 				jbtn.addMouseMotionListener(new MouseMotionAdapter() {
@@ -93,10 +132,18 @@ public class TableView extends JDialog {
 						}
 					}
 				});
-				jbtn.setBounds(panel.getX(), panel.getY(), 80, 23);
+				jbtn.setBounds(panel.getX(), panel.getY(), 85, 23);
 				panel.add(jbtn);
 				panel.repaint();
 				// panel.revalidate();
+				
+				try {
+					tab.createTable(count);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				count++;
 			}
 		});
@@ -108,16 +155,38 @@ public class TableView extends JDialog {
 										"Delete Table",
 										JOptionPane.INFORMATION_MESSAGE);
 				if (s == null)
-					System.out.println("Cancelled");
+					;// Cancel button was clicked
 				else if (s.length() == 0)
-					System.out.println("No string entered.\n");
-				else if (Integer.parseInt(s) < 5)
-					JOptionPane.showMessageDialog(null, "\"" + s + "\" is not a valid table num");
-				else
-					System.out.println("Valid\n");
+					JOptionPane.showMessageDialog(null, "Please enter a number before clicking \"OK\"");
+				else {
+					Component[] allComp = panel.getComponents();
+					boolean validTable = false;
+					
+					int i;
+					for (i = 0; i < allComp.length; i++) {
+						if (((JButton) allComp[i]).getActionCommand().substring(6).equals(s)) {
+							validTable = true;
+							break;
+						}
+					}
+					
+					if (validTable) {
+						panel.remove(allComp[i]);
+						panel.revalidate();
+						panel.repaint();
+						try {
+							tab.deleteTable(Integer.parseInt(s));
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Please enter a valid table number.");
+				}
 			}
 		});
-		JLabel lblNewLabel_2 = new JLabel("Update a table:");
+		JLabel lblNewLabel_2 = new JLabel("Update seats of table:");
 		JButton btnNewButton_2 = new JButton("Update");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -125,56 +194,50 @@ public class TableView extends JDialog {
 						"Update Table",
 						JOptionPane.INFORMATION_MESSAGE);
 				if (s == null)
-					System.out.println("Cancelled");
+					;// Cancel button was clicked
 				else if (s.length() == 0)
-					System.out.println("No string entered.\n");
-				else if (Integer.parseInt(s) < 5)
-					JOptionPane.showMessageDialog(null, "\"" + s + "\" is not a valid table num");
+					JOptionPane.showMessageDialog(null, "Please enter a number before clicking \"OK\"");
 				else {
-					System.out.println("Valid\n"); // For valid, it will open a new window
-					String s1 = JOptionPane.showInputDialog(null, "Enter new number of seats:",
-							"Update Seat",
-							JOptionPane.INFORMATION_MESSAGE);
+					Component[] allComp = panel.getComponents();
+					boolean validTable = false;
+					
+					int i;
+					for (i = 0; i < allComp.length; i++) {
+						if (((JButton) allComp[i]).getActionCommand().substring(6).equals(s)) {
+							validTable = true;
+							break;
+						}
+					}
+					if (validTable) {
+						String s1 = JOptionPane.showInputDialog(null, "Enter the new number of seats:",
+								"Update Seat",
+								JOptionPane.INFORMATION_MESSAGE);
+						if (s1 == null)
+							; // Cancel button was clicked
+						else if (s1.length() == 0)
+							JOptionPane.showMessageDialog(null, "Please enter a number before clicking \"OK\"");
+						else {
+							try {
+								Integer.parseInt(s1);
+								try {
+									tab.setSeat(Integer.parseInt(s), Integer.parseInt(s1));
+									JOptionPane.showMessageDialog(null, "The seats at Table " + s + " have been updated.");
+								} catch (Exception e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
+							} catch (Exception e1) {
+								JOptionPane.showMessageDialog(null, "Please enter a valid Integer.");
+							}
+						}
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Please enter a valid table number.");
 				}
 			}
 		});
-		JButton btnNewButton_3 = new JButton("Table 1");
-		btnNewButton_3.setBackground(new Color(144, 238, 144));
-		btnNewButton_3.setBounds(145, 27, 80, 23);
 		
-		JButton btnNewButton_4 = new JButton("Table 2");
-		btnNewButton_4.setBackground(new Color(250, 128, 114));
-		btnNewButton_4.setBounds(16, 68, 80, 23);
 		
-		JButton btnNewButton_5 = new JButton("Table 3");
-		btnNewButton_5.setBackground(new Color(144, 238, 144));
-		btnNewButton_5.setBounds(16, 109, 80, 23);
-		
-		JButton btnNewButton_6 = new JButton("Table 4");
-		btnNewButton_6.setBackground(new Color(144, 238, 144));
-		btnNewButton_6.setBounds(16, 150, 80, 23);
-		
-		JButton btnNewButton_7 = new JButton("Table 5");
-		btnNewButton_7.setBackground(new Color(250, 128, 114));
-		btnNewButton_7.setBounds(145, 68, 80, 23);
-		
-		JButton btnNewButton_8 = new JButton("Table 6");
-		btnNewButton_8.setBackground(new Color(250, 128, 114));
-		btnNewButton_8.setBounds(145, 109, 80, 23);
-		
-		JButton btnNewButton_9 = new JButton("Table 7");
-		btnNewButton_9.setBackground(new Color(144, 238, 144));
-		btnNewButton_9.setBounds(145, 150, 80, 23);
-		panel.setLayout(null);
-		panel.add(btnNewButton_4);
-		panel.add(btnNewButton_5);
-		panel.add(btnNewButton_6);
-		panel.add(btnNewButton_7);
-		panel.add(btnNewButton_8);
-		panel.add(btnNewButton_9);
-		panel.add(btnNewButton_3);
-		
-		JLabel lblNewLabel_3 = new JLabel("Number of Seats: ");
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
@@ -217,6 +280,7 @@ public class TableView extends JDialog {
 						.addGap(11)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)))
 		);
+		panel.setLayout(null);
 		contentPanel.setLayout(gl_contentPanel);
 		{
 			JPanel buttonPane = new JPanel();
@@ -226,12 +290,122 @@ public class TableView extends JDialog {
 				JButton returnButton = new JButton("Return");
 				returnButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
+						dispose();
 					}
 				});
 				returnButton.setActionCommand("Cancel");
 				buttonPane.add(returnButton);
 			}
+		}
+	}
+	
+	public void setButtons(JPanel pan) {
+		int[] allX = null;
+		int[] allY = null;
+		boolean[] allOcc = null;
+		int[] allTabNums = null;
+		
+		try {
+			allX = tab.getAllXCoords();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			allY = tab.getAllYCoords();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			allOcc = tab.getAllOccupied();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			allTabNums = tab.getAllTableNums();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			if (tab.getNumRows() != 0) {
+				for (int i = 0; i < tab.getNumRows(); i++) {
+					JButton jbtn = new JButton("Table " + String.valueOf(allTabNums[i]));
+					jbtn.setBounds(allX[i], allY[i], 85, 23);
+					if (allOcc[i])
+						jbtn.setBackground(new Color(250, 128, 114));
+					else
+						jbtn.setBackground(new Color(144, 238, 144));
+					jbtn.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							dispose();
+							ReceiptPage rp = new ReceiptPage(Integer.parseInt(((JButton) e.getComponent()).getActionCommand().substring(6)));
+							rp.setVisible(true);
+						}
+						@Override
+						public void mousePressed(MouseEvent e) {
+							startPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), e.getComponent().getParent());
+						}
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							startPoint = null;
+							String num = ((JButton) e.getComponent()).getActionCommand();
+							num = num.substring(6);
+							try {
+								tab.setXCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getX());
+								tab.setYCoord(Integer.parseInt(num), ((JButton) e.getComponent()).getY());
+							} catch (NumberFormatException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							int tabNum = Integer.parseInt(((JButton) e.getComponent()).getActionCommand().substring(6));
+							
+							try {
+								lblNewLabel_3.setText("Number of Seats at Table " + tabNum + ": "+ String.valueOf(tab.getSeat(tabNum)));
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} 
+						}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							lblNewLabel_3.setText("Number of Seats at Table :");
+						}
+					});
+					jbtn.addMouseMotionListener(new MouseMotionAdapter() {
+						@Override
+						public void mouseDragged(MouseEvent e) {
+							Point location = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), e.getComponent().getParent());
+							if (e.getComponent().getParent().getBounds().contains(location)) {
+								Point newLocation = e.getComponent().getLocation();
+								newLocation.translate(location.x - startPoint.x, location.y - startPoint.y);
+								newLocation.x = Math.max(newLocation.x, 0);
+								newLocation.y = Math.max(newLocation.y, 0);
+								newLocation.x = Math.min(newLocation.x, e.getComponent().getParent().getWidth() - e.getComponent().getWidth());
+								newLocation.y = Math.min(newLocation.y, e.getComponent().getParent().getHeight() - e.getComponent().getHeight());
+								e.getComponent().setLocation(newLocation);
+								startPoint = location;
+							}
+						}
+					});
+					
+					pan.add(jbtn);
+				}
+				count = allTabNums[tab.getNumRows() - 1] + 1;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

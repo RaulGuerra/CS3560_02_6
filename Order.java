@@ -1,12 +1,13 @@
-package posSystem;
+// package posSystem;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 /**
  * 
- * @author Christopher, Abhinav Neelam
+ * @author Christopher, Abhinav Neelam, Eric Wagner-Roberts
  * class name:  Order
  * date: 3/17/2022
  * class section: CS 3560.02
@@ -56,6 +57,156 @@ public class Order
     	}catch(Exception e){System.out.println(e);}
 		
     	return orders;
+	}
+	
+	/**
+	    * Gets all orders from the database and return them in a 2D Array
+	     * @return 2D array of order data
+	     * @throws Exception
+	*/
+	public static String[][] getOrdersView() throws Exception {
+		Connection c = Main.getConnection();
+		try {
+			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice` ORDER BY orderID ASC", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery();
+			
+            rs.last();
+			int length = rs.getRow();
+			String[][] orders = new String[length][6];
+			rs.first();
+			
+			if (length > 0) {
+				int arrayRow = 0;
+				do {
+					orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+					orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+					orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+					orders[arrayRow][3] = rs.getString("name");
+					orders[arrayRow][4] = rs.getString("modification");
+					orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+					arrayRow++;
+				} while (rs.next());
+				return orders;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	/**
+	    * Gets specific orders from the OrderPrice view and return them in a 2D Array
+	     * @return 2D array of order data
+	     * @throws Exception
+	*/	
+	public static String[][] searchOrdersView(boolean orderIdChoice, boolean foodIdChoice, boolean checkIdChoice,
+			boolean nameChoice, boolean modificationChoice, boolean priceChoice, int orderId, int foodId, int checkId,
+			String name, String modification, float price) {
+		
+		try {
+			Connection c = Main.getConnection();
+			boolean startWhere = true;
+
+			String sql = "SELECT * FROM OrderPrice";
+
+			//Order ID
+			if (orderIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				}
+				sql += "orderID = " + String.valueOf(orderId);
+			}
+
+			//Food ID
+			if (foodIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "foodID = " + String.valueOf(foodId);
+			}
+
+			//Check ID
+			if (checkIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "checkID = " + String.valueOf(checkId);
+			}
+
+			//Name
+			if (nameChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "name = '" + String.valueOf(name) + "'";
+			}
+
+			//Modification
+			if (modificationChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "modification = '" + String.valueOf(modification) + "'";
+			}
+			
+			//Price
+			if (priceChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "price = " + String.valueOf(price);
+			}
+			
+			if (!startWhere) {
+				sql += ")";
+			}
+			
+			sql += " ORDER BY orderID ASC";
+			
+			PreparedStatement stmt = c.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery();
+			rs.last();
+			int length = rs.getRow();
+			String[][] orders = new String[length][6];
+			rs.first();
+			
+			if (length > 0) {
+				int arrayRow = 0;
+				do {
+					orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+					orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+					orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+					orders[arrayRow][3] = rs.getString("name");
+					orders[arrayRow][4] = rs.getString("modification");
+					orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+					arrayRow++;
+				} while (rs.next());
+				return orders;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
 	}
 	
 	/**

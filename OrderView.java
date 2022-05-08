@@ -1,4 +1,4 @@
-package posSystem;
+// package posSystem;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
