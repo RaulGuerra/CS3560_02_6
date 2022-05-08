@@ -49,7 +49,7 @@ public class OrderView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					OrderView frame = new OrderView();
+					OrderView frame = new OrderView(2);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,11 +61,9 @@ public class OrderView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public OrderView() {
+	public OrderView(int receiptNumber) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 443, 292);
-		
-		int tableNumber=1;
 		
 		Object[][] empty = {};
 		String[] columnNames = {"ID", "Name","Modification","Price"};
@@ -78,17 +76,19 @@ public class OrderView extends JFrame {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.setDefaultEditor(Object.class, null);
 		
-		int tablenumber = 1;
 		JScrollPane scrollPane = new JScrollPane();
-		JLabel lblNewLabel = new JLabel("Orders for Table #" + tablenumber);
+		JLabel lblNewLabel = new JLabel("Orders for Receipt #" + receiptNumber);
 		
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 19));
 		
 		TableModel m = table.getModel();
 		table.clearSelection();
-
+		
+		System.out.println();
+		
+		
 		try {
-			ArrayList<Order> orders = Order.getOrdersFromTable(tableNumber);
+			ArrayList<Order> orders = Order.getOrdersFromReceipt(receiptNumber);
 			
 			for(int i=0;i<orders.size();++i) {
 				Order o = orders.get(i);
@@ -106,17 +106,28 @@ public class OrderView extends JFrame {
         columnModel.getColumn(2).setPreferredWidth(200);
         columnModel.getColumn(3).setPreferredWidth(20);
 
+		if(table.getRowCount() >= 1) {
+			table.changeSelection(0, 0, false, false);
+		}
 		JButton btnNewButton = new JButton("Delete");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				int row = table.getSelectedRow();
+				
+				if(row == -1) return;
+				
 				int id = (int)table.getModel().getValueAt(row, 0);
 
 				model.removeRow(row);
 
 				try {	        		
 					Order.removeOrder(id);
+					
+					if(table.getRowCount() >= 1) {
+						table.changeSelection(0, 0, false, false);
+					}
+					
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -125,7 +136,6 @@ public class OrderView extends JFrame {
 		
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		table.changeSelection(0, 0, false, false);
 		setLocationRelativeTo(null);
 		
 		JButton btnNewButton_1 = new JButton("Update");
@@ -133,6 +143,7 @@ public class OrderView extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				int row = table.getSelectedRow();
+				if(row == -1) return;
 				
 		        String yo = JOptionPane.showInputDialog(null, "Enter modification", "Modification Window", JOptionPane.PLAIN_MESSAGE);
 
@@ -154,6 +165,27 @@ public class OrderView extends JFrame {
 		
 		scrollPane.setViewportView(table);
 		
+		JButton btnNewButton_1_1 = new JButton("Back");
+		
+		btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnNewButton_1_1.setActionCommand("Cancel");
+		btnNewButton_1_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		JButton btnAdd = new JButton("Add");
+		btnAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				//FoodMenu menu = new FoodMenu();				
+				//menu.setVisible(true);
+				
+			}
+		});
+		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -164,15 +196,19 @@ public class OrderView extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 428, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(90)
+							.addGap(5)
+							.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-							.addGap(36)
-							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnNewButton_1)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
 					.addGap(397))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(124)
 					.addComponent(lblNewLabel)
-					.addContainerGap(538, Short.MAX_VALUE))
+					.addContainerGap(522, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -180,11 +216,17 @@ public class OrderView extends JFrame {
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-					.addGap(18, 18, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-					.addGap(20))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+								.addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
 		);
 		getContentPane().setLayout(groupLayout);
 	}

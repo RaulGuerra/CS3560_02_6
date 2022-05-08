@@ -86,6 +86,33 @@ public class Order
 	}
 	
 	/**
+	    * Gets all orders which belong to receipt
+	     * @return array of Order objects
+	     * @throws Exception
+	*/
+	public static ArrayList<Order> getOrdersFromReceipt(int receiptNum) throws Exception {
+		Connection c = Main.getConnection();
+		ArrayList<Order> orders = new ArrayList<Order>();
+
+		try {
+ 		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ?");
+ 		stmt.setInt(1, receiptNum);
+ 	    ResultSet rs = stmt.executeQuery();
+ 	    
+ 	    while(rs.next()) {
+ 			int orderID = rs.getInt("orderID");
+ 			int receiptID = rs.getInt("receiptID");
+ 			int foodID = rs.getInt("foodID");
+ 			String modification = rs.getString("modification");
+ 			
+ 			orders.add(new Order(orderID, receiptID, foodID, modification));
+ 	    }
+ 	}catch(Exception e){System.out.println(e);}
+		
+ 	return orders;
+	}
+	
+	/**
 	    * Updates Order object with a new modification
 	     * @param orderID. The orderID 
 	     * @param modification. The newly modified string
