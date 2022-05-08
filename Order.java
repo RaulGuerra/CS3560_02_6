@@ -105,9 +105,6 @@ public class Order
 			boolean nameChoice, boolean modificationChoice, boolean priceChoice, int orderId, int foodId, int checkId,
 			String name, String modification, float price) {
 		
-		System.out.println(name);
-		System.out.println(modification);
-		
 		try {
 			Connection c = Main.getConnection();
 			boolean startWhere = true;
@@ -183,8 +180,6 @@ public class Order
 			}
 			
 			sql += " ORDER BY orderID ASC";
-			
-			System.out.println(sql);
 			
 			PreparedStatement stmt = c.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = stmt.executeQuery();

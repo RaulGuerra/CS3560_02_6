@@ -111,9 +111,9 @@ public class SearchOrders extends JDialog {
 
 	//Create the frame.
 	public SearchOrders() throws Exception {
-		setModalityType(ModalityType.APPLICATION_MODAL);
-
+		setTitle("Search Orders");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -492,7 +492,7 @@ public class SearchOrders extends JDialog {
 
 				DefaultTableModel data = null;
 				try {
-					data = new DefaultTableModel(Order.getOrdersView(), orderColumns);
+					data = new DefaultTableModel(Order.searchOrdersView(prevOrderIdChoice, prevFoodIdChoice, prevCheckIdChoice, prevNameChoice, prevModificationChoice, prevPriceChoice, prevOrderId, prevFoodId, prevCheckId, prevName, prevModification, prevPrice), orderColumns);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
