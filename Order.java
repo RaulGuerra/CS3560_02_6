@@ -65,28 +65,35 @@ public class Order
 	     * @throws Exception
 	*/
 	public static String[][] getOrdersView() throws Exception {
-		String[][] ordersFallback = null;
 		Connection c = Main.getConnection();
 		try {
-			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice` ORDER BY orderID ASC", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = stmt.executeQuery();
-			rs.last();
-			String[][] orders = new String[rs.getRow()][6];
+			
+            rs.last();
+			int length = rs.getRow();
+			String[][] orders = new String[length][6];
 			rs.first();
-			int arrayRow = 0;
-			while(rs.next()) {
-				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
-				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
-				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
-				orders[arrayRow][3] = rs.getString("name");
-				orders[arrayRow][4] = rs.getString("modification");
-				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
-				arrayRow++;
+			
+			if (length > 0) {
+				int arrayRow = 0;
+				do {
+					orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+					orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+					orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+					orders[arrayRow][3] = rs.getString("name");
+					orders[arrayRow][4] = rs.getString("modification");
+					orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+					arrayRow++;
+				} while (rs.next());
+				return orders;
+			} else {
+				return null;
 			}
-			ordersFallback = orders;
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		catch(Exception e){System.out.println(e);}
-		return ordersFallback;
+		return null;
 	}
 	
 	/**
@@ -97,6 +104,10 @@ public class Order
 	public static String[][] searchOrdersView(boolean orderIdChoice, boolean foodIdChoice, boolean checkIdChoice,
 			boolean nameChoice, boolean modificationChoice, boolean priceChoice, int orderId, int foodId, int checkId,
 			String name, String modification, float price) {
+		
+		System.out.println(name);
+		System.out.println(modification);
+		
 		try {
 			Connection c = Main.getConnection();
 			boolean startWhere = true;
@@ -166,27 +177,37 @@ public class Order
 				}
 				sql += "price = " + String.valueOf(price);
 			}
-
-			if (!startWhere) { // conditions were set so ending parenthesis
+			
+			if (!startWhere) {
 				sql += ")";
 			}
 			
-			PreparedStatement stmt = c.prepareStatement(sql);
+			sql += " ORDER BY orderID ASC";
+			
+			System.out.println(sql);
+			
+			PreparedStatement stmt = c.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = stmt.executeQuery();
-			String[][] orders = new String[rs.getRow()][6];
-
-			int arrayRow = 0;
-			while(rs.next()) {
-				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
-				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
-				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
-				orders[arrayRow][3] = rs.getString("name");
-				orders[arrayRow][4] = rs.getString("modification");
-				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
-				arrayRow++;
+			rs.last();
+			int length = rs.getRow();
+			String[][] orders = new String[length][6];
+			rs.first();
+			
+			if (length > 0) {
+				int arrayRow = 0;
+				do {
+					orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
+					orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
+					orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
+					orders[arrayRow][3] = rs.getString("name");
+					orders[arrayRow][4] = rs.getString("modification");
+					orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+					arrayRow++;
+				} while (rs.next());
+				return orders;
+			} else {
+				return null;
 			}
-
-			return orders;
 		} catch (Exception e) {
 			System.out.println(e);
 		}
