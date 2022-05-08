@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 /**
  * 
@@ -74,13 +75,13 @@ public class Order
 			rs.first();
 			int arrayRow = 0;
 			while(rs.next()) {
-				arrayRow++;
 				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
 				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
 				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
 				orders[arrayRow][3] = rs.getString("name");
 				orders[arrayRow][4] = rs.getString("modification");
 				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+				arrayRow++;
 			}
 			ordersFallback = orders;
 		}
@@ -92,30 +93,104 @@ public class Order
 	    * Gets specific orders from the OrderPrice view and return them in a 2D Array
 	     * @return 2D array of order data
 	     * @throws Exception
-	*/
-	public static String[][] searchOrdersView() throws Exception {
-		String[][] ordersFallback = null;
-		Connection c = Main.getConnection();
+	*/	
+	public static String[][] searchOrdersView(boolean orderIdChoice, boolean foodIdChoice, boolean checkIdChoice,
+			boolean nameChoice, boolean modificationChoice, boolean priceChoice, int orderId, int foodId, int checkId,
+			String name, String modification, float price) {
 		try {
-			PreparedStatement stmt = c.prepareStatement("SELECT * FROM `orderprice`", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			Connection c = Main.getConnection();
+			boolean startWhere = true;
+
+			String sql = "SELECT * FROM OrderPrice";
+
+			//Order ID
+			if (orderIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				}
+				sql += "orderID = " + String.valueOf(orderId);
+			}
+
+			//Food ID
+			if (foodIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "foodID = " + String.valueOf(foodId);
+			}
+
+			//Check ID
+			if (checkIdChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "checkID = " + String.valueOf(checkId);
+			}
+
+			//Name
+			if (nameChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "name = '" + String.valueOf(name) + "'";
+			}
+
+			//Modification
+			if (modificationChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "modification = '" + String.valueOf(modification) + "'";
+			}
+			
+			//Price
+			if (priceChoice) { // is exactly
+				if (startWhere) {
+					startWhere = false;
+					sql += " WHERE (";
+				} else {
+					sql += " AND ";
+				}
+				sql += "price = " + String.valueOf(price);
+			}
+
+			if (!startWhere) { // conditions were set so ending parenthesis
+				sql += ")";
+			}
+			
+			PreparedStatement stmt = c.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
-			rs.last();
 			String[][] orders = new String[rs.getRow()][6];
-			rs.first();
+
 			int arrayRow = 0;
 			while(rs.next()) {
-				arrayRow++;
 				orders[arrayRow][0] = Integer.toString(rs.getInt("orderID"));
 				orders[arrayRow][1] = Integer.toString(rs.getInt("foodID"));
 				orders[arrayRow][2] = Integer.toString(rs.getInt("checkID"));
 				orders[arrayRow][3] = rs.getString("name");
 				orders[arrayRow][4] = rs.getString("modification");
 				orders[arrayRow][5] = Float.toString(rs.getFloat("price"));
+				arrayRow++;
 			}
-			ordersFallback = orders;
+
+			return orders;
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		catch(Exception e){System.out.println(e);}
-		return ordersFallback;
+		return null;
 	}
 	
 	/**
