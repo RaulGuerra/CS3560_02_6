@@ -77,11 +77,11 @@ public class SearchReceipts extends JDialog {
 	boolean paidChoice = false;
 	int checkID;
 	int tableNumber;
-	int totalAmount;
+	float totalAmount;
 	Timestamp date;
 	boolean paid;
-	int totalAmountMin;
-	int totalAmountMax;
+	float totalAmountMin;
+	float totalAmountMax;
 	Timestamp dateMin;
 	Timestamp dateMax;
 
@@ -93,11 +93,11 @@ public class SearchReceipts extends JDialog {
 	boolean prevPaidChoice = false;
 	int prevCheckID;
 	int prevTableNumber;
-	int prevTotalAmount;
+	float prevTotalAmount;
 	Timestamp prevDate;
 	boolean prevPaid;
-	int prevTotalAmountMin;
-	int prevTotalAmountMax;
+	float prevTotalAmountMin;
+	float prevTotalAmountMax;
 	Timestamp prevDateMin;
 	Timestamp prevDateMax;
 
@@ -541,24 +541,32 @@ public class SearchReceipts extends JDialog {
 					tableNumber = Integer.valueOf(txtTableNumber.getText());
 				}
 				if (totalAmountChoice == 1) {
-					totalAmount = Integer.valueOf(txtTotalAmount.getText());
+					totalAmount = Float.valueOf(txtTotalAmount.getText());
 				} else if (totalAmountChoice == 2) {
-					totalAmountMin = Integer.valueOf(txtTotalMin.getText());
-					totalAmountMax = Integer.valueOf(txtTotalMax.getText());
+					if (txtTotalMinHelper && !txtTotalMaxHelper) { // totalmin unspecified
+						totalAmountMin = 0;
+						totalAmountMax = Float.valueOf(txtTotalMax.getText());
+					} else if (!txtTotalMinHelper && txtTotalMaxHelper) { // totalmax unspecified
+						totalAmountMin = Float.valueOf(txtTotalMin.getText());
+						totalAmountMax = Float.MAX_VALUE;
+					} else { // both specified
+						totalAmountMin = Float.valueOf(txtTotalMin.getText());
+						totalAmountMax = Float.valueOf(txtTotalMax.getText());
+					}
 				}
 				if (dateChoice == 1) {
 					date = Timestamp.valueOf(txtDate.getText());
 				} else if (dateChoice == 2) {
-					// datemin unspecified
-					if (txtDateMinHelper && !txtDateMaxHelper) {
+
+					if (txtDateMinHelper && !txtDateMaxHelper) { // datemin unspecified
 						dateMin = Timestamp.valueOf("1970-01-01 00:00:01");
 						dateMax = Timestamp.valueOf(txtDateMax.getText());
-						// datemax unspecified
-					} else if (!txtDateMinHelper && txtDateMaxHelper) {
+
+					} else if (!txtDateMinHelper && txtDateMaxHelper) { // datemax unspecified
 						dateMin = Timestamp.valueOf(txtDateMin.getText());
 						dateMax = Timestamp.valueOf("2038-01-19 03:14:07");
-						// both specified
-					} else {
+
+					} else { // both specified
 						dateMin = Timestamp.valueOf(txtDateMin.getText());
 						dateMax = Timestamp.valueOf(txtDateMax.getText());
 					}
@@ -569,7 +577,7 @@ public class SearchReceipts extends JDialog {
 //						dateMax);
 
 				DefaultTableModel data = new DefaultTableModel(receipt.getReceipts(checkIdChoice, tableNumberChoice,
-						totalAmountChoice, dateChoice, paidChoice, checkID, tableNumber, totalAmountChoice, date, paid,
+						totalAmountChoice, dateChoice, paidChoice, checkID, tableNumber, totalAmount, date, paid,
 						totalAmountMin, totalAmountMax, dateMin, dateMax), receiptColumns);
 				saveQueryParams();
 
