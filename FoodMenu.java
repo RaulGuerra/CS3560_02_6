@@ -1,21 +1,22 @@
-// package posSystem;
-//import posSystem.SQLConnect;
-//import posSystem.foodDesc;
+//package posSystem;
+import posSystem.SQLConnect;
+import posSystem.foodDesc;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 
-public class FoodMenu {
-
-	private JFrame frame;
-
+public class FoodMenu extends JFrame {
 	/**
 	 * Launch the application.
 	 */
@@ -23,8 +24,9 @@ public class FoodMenu {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FoodMenu window = new FoodMenu();
-					window.frame.setVisible(true);
+					FoodMenu window = new FoodMenu(1);
+					window.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,18 +37,17 @@ public class FoodMenu {
 	/**
 	 * Create the application.
 	 */
-	public FoodMenu() {
-		initialize();
+	public FoodMenu(int receiptID) {
+		initialize(receiptID);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 784, 498);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	private void initialize(int receiptID) {
+		setBounds(100, 100, 784, 498);
+		getContentPane().setLayout(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		String[] food = null;
 		try {
@@ -55,38 +56,44 @@ public class FoodMenu {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		JComboBox comboBox = new JComboBox(food);
 		comboBox.setBounds(76, 162, 206, 22);
-		frame.getContentPane().add(comboBox);
+		getContentPane().add(comboBox);
 		
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.setBounds(311, 162, 91, 23);
-		frame.getContentPane().add(btnNewButton);
+		getContentPane().add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Modify");
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
+		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				
-				//Description gets clicked:
-				
-				String selectFoodName = (String) comboBox.getSelectedItem();
-				modifyFood.invokeModWindow(selectFoodName);
-				
+			public void mousePressed(MouseEvent e) {
+				String foodname = (String) comboBox.getSelectedItem();
+				String modification = JOptionPane.showInputDialog(null, "Enter modification", "Modification Window", JOptionPane.PLAIN_MESSAGE);
+
+				System.out.println(foodname);
+
+		        if(modification != null)
+		        {
+		        	try {
+		        		int foodid = Food.getFoodID(foodname);
+		        		Order.insertOrder(receiptID, foodid, modification);
+		        		
+		        		System.out.println("Disposing...");
+		        		
+		        		dispose();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+		        }
 			}
 		});
-		btnNewButton_1.setBounds(432, 162, 91, 23);
-		frame.getContentPane().add(btnNewButton_1);
-		
 		
 		// Description button
-		
 		JButton btnNewButton_2 = new JButton("Description");
 		btnNewButton_2.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				
+			public void mousePressed(MouseEvent e) {
 				//Description gets clicked:
 				
 				String selectFoodName = (String) comboBox.getSelectedItem();
@@ -101,15 +108,12 @@ public class FoodMenu {
 				//End Description gets clicked:
 			}
 		});
-		btnNewButton_2.setBounds(553, 162, 127, 22);
-		frame.getContentPane().add(btnNewButton_2);
+		btnNewButton_2.setBounds(410, 162, 127, 22);
+		getContentPane().add(btnNewButton_2);
 		
 		JLabel lblNewLabel = new JLabel("Add Menu Items To Check:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel.setBounds(72, 58, 303, 45);
-		frame.getContentPane().add(lblNewLabel);
-		
-		
-		
+		getContentPane().add(lblNewLabel);
 	}
 }

@@ -1,4 +1,4 @@
-// package posSystem;
+//package posSystem;
 
 import java.sql.Connection;  
 import java.sql.DriverManager;
@@ -126,10 +126,14 @@ public class Food {
      * @return the integer foodID
      * @throws Exception
      */
-    public int getFoodID(String foodName) throws Exception
+    public static int getFoodID(String foodName) throws Exception
     {
+    	Connection con = Main.getConnection();
+    	System.out.println(foodName);
+    	
     	try {
     		PreparedStatement stmt = con.prepareStatement("SELECT foodID FROM Food where name=?");
+    		
     		stmt.setString(1,foodName);
     		
     		//execute query to find the ID and print it
@@ -176,7 +180,6 @@ public class Food {
     }
     
     /**
-<<<<<<< HEAD
     * Getter method of price attribute
      * @param foodID The food item ID that the attribute belongs to 
      * @param con Connection to establish the database

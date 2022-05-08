@@ -1,4 +1,4 @@
-// package posSystem;
+//package posSystem;
 
 import java.awt.EventQueue;
 
@@ -62,10 +62,6 @@ public class foodDesc {
 		btnNewButton.setBounds(213, 326, 91, 23);
 		frame.getContentPane().add(btnNewButton);
 	}
-	
-	
-	
-	
 	
 	public static void invokeDescWindow(String food, String desc)
 	{

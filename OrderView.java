@@ -1,4 +1,4 @@
-// package posSystem;
+//package posSystem;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -33,6 +33,8 @@ import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
@@ -49,7 +51,7 @@ public class OrderView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					OrderView frame = new OrderView(2);
+					OrderView frame = new OrderView(8);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,6 +66,7 @@ public class OrderView extends JFrame {
 	public OrderView(int receiptNumber) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 443, 292);
+		setResizable(false);
 		
 		Object[][] empty = {};
 		String[] columnNames = {"ID", "Name","Modification","Price"};
@@ -83,9 +86,6 @@ public class OrderView extends JFrame {
 		
 		TableModel m = table.getModel();
 		table.clearSelection();
-		
-		System.out.println();
-		
 		
 		try {
 			ArrayList<Order> orders = Order.getOrdersFromReceipt(receiptNumber);
@@ -179,11 +179,31 @@ public class OrderView extends JFrame {
 		btnAdd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//FoodMenu menu = new FoodMenu();				
-				//menu.setVisible(true);
-				
+				FoodMenu menu = new FoodMenu(receiptNumber);				
+				menu.setVisible(true);
+
+				menu.addWindowListener(new WindowAdapter()
+		        {
+		            @Override
+		            public void windowClosed(WindowEvent e)
+		            {
+		                try {	      
+		                	Order lo = Order.getLatestOrder();
+			                Food fo = Food.getFood(lo.getFoodID());	
+			                
+			                if (lo.getOrderID() == (int)model.getValueAt(model.getRowCount()-1, 0)) {
+			                	return;
+			                }
+			                
+			                model.addRow(new Object[]{lo.getOrderID(),fo.getName(),lo.getMod(), fo.getPrice()});
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}               
+		            }
+		        });
 			}
 		});
+		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());

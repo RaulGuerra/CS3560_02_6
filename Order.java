@@ -1,4 +1,4 @@
-// package posSystem;
+//package posSystem;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -57,6 +57,30 @@ public class Order
     	}catch(Exception e){System.out.println(e);}
 		
     	return orders;
+	}
+	
+	/**
+	    * Gets latest order from database
+	     * @return Order object
+	     * @throws Exception
+	*/
+	public static Order getLatestOrder() throws Exception {
+		Connection c = Main.getConnection();
+		
+		try {
+	 		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `Order` Order By OrderID Desc");
+	 	    ResultSet rs = stmt.executeQuery();
+	 	    
+	 	    rs.next();
+	 	    
+	 	    int orderID = rs.getInt("orderID");
+			int receiptID = rs.getInt("receiptID");
+			int foodID = rs.getInt("foodID");
+			String modification = rs.getString("modification");
+			
+			return new Order(orderID, receiptID, foodID, modification);
+		}catch(Exception e){System.out.println(e);}
+		return null;
 	}
 	
 	/**
@@ -343,6 +367,27 @@ public class Order
 			
     		stmt.executeUpdate();
     	} catch(Exception e){System.out.println(e);}
+	}
+	
+	/**
+	    * Inserts Order object to database
+	     * @param order. The order object details 
+	     * @return void
+	     * @throws Exception
+	*/
+	public static void insertOrder(int checkID, int foodID, String modification) throws Exception {
+		Connection con = Main.getConnection();
+		
+		try {
+			String sql = "INSERT INTO `Order` (receiptID, foodID, modification) VALUES (?, ?, ?)";
+	    	//add respective values
+	    	PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, checkID);
+			stmt.setInt(2, foodID);
+			stmt.setString(3, modification);
+			
+ 		stmt.executeUpdate();
+		} catch(Exception e){System.out.println(e);}
 	}
 	
 	/**
