@@ -1,6 +1,7 @@
 //package posSystem;
 
 import java.awt.EventQueue;
+import java.awt.Dialog.ModalityType;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -11,12 +12,14 @@ import javax.swing.JTextPane;
 import javax.swing.JSplitPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class foodDesc {
 
-	private static JFrame frame;
+	private static JDialog frame;
 
 	/**
 	 * Launch the application.
@@ -37,9 +40,10 @@ public class foodDesc {
 	 * Initialize the contents of the frame.
 	 */
 	public static void initialize(String food, String desc) {
-		frame = new JFrame();
+		frame = new JDialog();
+		frame.setModalityType(ModalityType.APPLICATION_MODAL);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setBounds(100, 100, 546, 407);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel(food);
@@ -65,7 +69,6 @@ public class foodDesc {
 	
 	public static void invokeDescWindow(String food, String desc)
 	{
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

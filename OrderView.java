@@ -38,6 +38,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class OrderView extends JDialog {
@@ -68,6 +69,8 @@ public class OrderView extends JDialog {
 		setBounds(100, 100, 443, 292);
 		setResizable(false);
 		
+		DecimalFormat df = new DecimalFormat("0.00");
+		
 		Object[][] empty = {};
 		String[] columnNames = {"ID", "Name","Modification","Price"};
 		
@@ -94,7 +97,7 @@ public class OrderView extends JDialog {
 				Order o = orders.get(i);
 				Food f = Food.getFood(o.getFoodID());
 				
-				model.addRow(new Object[]{o.getOrderID(),f.getName(), o.getMod(), f.getPrice()});
+				model.addRow(new Object[]{o.getOrderID(),f.getName(), o.getMod(), df.format(f.getPrice())});
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -170,6 +173,14 @@ public class OrderView extends JDialog {
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				SearchOrders so;
+				try {
+					so = new SearchOrders();
+					so.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
 			}
 		});
 		btnNewButton_1_1.setActionCommand("Cancel");
@@ -195,7 +206,7 @@ public class OrderView extends JDialog {
 			                	return;
 			                }
 			                
-			                model.addRow(new Object[]{lo.getOrderID(),fo.getName(),lo.getMod(), fo.getPrice()});
+			                model.addRow(new Object[]{lo.getOrderID(),fo.getName(),lo.getMod(), df.format(fo.getPrice())});
 			                
 						} catch (Exception e1) {
 							e1.printStackTrace();

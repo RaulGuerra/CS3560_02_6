@@ -8,6 +8,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +16,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Dialog.ModalityType;
 
-public class FoodMenu extends JFrame {
+public class FoodMenu extends JDialog {
 	/**
 	 * Launch the application.
 	 */
@@ -45,9 +47,11 @@ public class FoodMenu extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(int receiptID) {
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 784, 498);
 		getContentPane().setLayout(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
 		
 		String[] food = null;
 		try {
