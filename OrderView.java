@@ -191,7 +191,7 @@ public class OrderView extends JFrame {
 		                	Order lo = Order.getLatestOrder();
 			                Food fo = Food.getFood(lo.getFoodID());	
 			                
-			                if (lo.getOrderID() == (int)model.getValueAt(model.getRowCount()-1, 0)) {
+			                if (model.getRowCount() > 0 && lo.getOrderID() == (int)model.getValueAt(model.getRowCount()-1, 0)) {
 			                	return;
 			                }
 			                
