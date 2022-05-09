@@ -97,7 +97,6 @@ public class MainMenu extends JFrame {
 		JButton btnOrders = new JButton("Orders");
 		btnOrders.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
 				SearchOrders so = null;
 				try {
 					so = new SearchOrders();
@@ -106,7 +105,6 @@ public class MainMenu extends JFrame {
 					e1.printStackTrace();
 				}
 				so.setVisible(true);
-				frame.setVisible(true);
 			}
 		});
 		btnOrders.setFont(new Font("Tahoma", Font.PLAIN, 16));
