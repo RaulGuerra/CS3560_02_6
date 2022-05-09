@@ -644,6 +644,13 @@ public class SearchReceipts extends JDialog {
 		JButton btnNewReceipt = new JButton("Update Receipt");
 		btnNewReceipt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				int col = 0;
+				int row = table.getSelectedRow();
+				String value = table.getModel().getValueAt(row, col).toString();
+				System.out.println(value);
+				ReceiptPage2 rp = new ReceiptPage2(Integer.valueOf(value));
+				rp.setVisible(true);
 			}
 		});
 		btnNewReceipt.setFont(new Font("Tahoma", Font.PLAIN, 16));

@@ -9,6 +9,13 @@ public class Receipt {
 
 	private static Connection con;
 
+	private Timestamp date;
+	private int checkID;
+	private float total;
+	private int tableNumber;
+	private boolean paid;
+	String[][] orderQuantities;
+
 	public Receipt() {
 		try {
 			String driver = "com.mysql.cj.jdbc.Driver";
@@ -23,9 +30,88 @@ public class Receipt {
 		}
 	}
 
+	public void getReceipt(int checkID) {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM ReceiptSearch WHERE checkID=?");
+			stmt.setInt(1, checkID);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			this.checkID = checkID;
+			date = rs.getTimestamp("date");
+			total = rs.getFloat("total");
+			tableNumber = rs.getInt("tableNumber");
+			paid = rs.getBoolean("paid");
+			orderQuantities = getOrderQuantities(checkID);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public Timestamp getDate() {
+		return date;
+	}
+	
+	public int getCheckID() {
+		return checkID;
+	}
+	
+	public float getTotal() {
+		return total;
+	}
+	
+	public int getTableNumber() {
+		return tableNumber;
+	}
+	
+	public boolean getPaid() {
+		return paid;
+	}
+	
+	public String[][] getOrderQuantities() {
+		return orderQuantities;
+	}
+
+	public int getMostRecentReceiptID(int tableNumber) {
+		try {
+			PreparedStatement stmt = con.prepareStatement(
+					"SELECT * FROM receipt WHERE tableNumber=? AND DATE = (SELECT MAX(DATE) FROM receipt WHERE tableNumber=?)");
+			stmt.setInt(1, tableNumber);
+			stmt.setInt(2, tableNumber);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt("checkID");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return -1; // table doesn't have
+	}
+
+	public String[][] getOrderQuantities(int checkID) {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM OrderQuantity WHERE checkID=?");
+			stmt.setInt(1, checkID);
+			int rows = getNumRows(stmt);
+			int cols = 3;
+			String[][] orderQuantityData = new String[rows][cols];
+			ResultSet rs = stmt.executeQuery();
+			int i = 0;
+			while (rs.next()) {
+				orderQuantityData[i][0] = String.valueOf(rs.getInt("quantity"));
+				orderQuantityData[i][1] = String.valueOf(rs.getString("name"));
+				orderQuantityData[i][2] = "$" + String.format("%.02f", rs.getFloat("amount"));
+				i++;
+			}
+			return orderQuantityData;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+
 	public String[][] getAllReceipts() {
 		try {
-			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Receipt");
+			PreparedStatement stmt = con
+					.prepareStatement("SELECT checkID, tableNumber, total, date, paid FROM ReceiptSearch");
 
 			int rows = getNumRows(stmt);
 			int cols = 5;
@@ -37,8 +123,9 @@ public class Receipt {
 			while (rs.next()) {
 				receiptData[i][0] = String.valueOf(rs.getInt("checkID"));
 				receiptData[i][1] = String.valueOf(rs.getInt("tableNumber"));
-				receiptData[i][2] = String.valueOf(rs.getString("date"));
-				receiptData[i][3] = String.valueOf(rs.getBoolean("paid"));
+				receiptData[i][2] = "$" + String.format("%.02f", rs.getFloat("total"));
+				receiptData[i][3] = String.valueOf(rs.getString("date"));
+				receiptData[i][4] = String.valueOf(rs.getBoolean("paid"));
 				i++;
 			}
 
@@ -50,12 +137,12 @@ public class Receipt {
 	}
 
 	public String[][] getReceipts(boolean checkIdChoice, boolean tableNumberChoice, int totalAmountChoice,
-			int dateChoice, boolean paidChoice, int checkID, int tableNumber, double totalAmount, Timestamp date,
-			boolean paid, double totalAmountMin, double totalAmountMax, Timestamp dateMin, Timestamp dateMax) {
+			int dateChoice, boolean paidChoice, int checkID, int tableNumber, float totalAmount, Timestamp date,
+			boolean paid, float totalAmountMin, float totalAmountMax, Timestamp dateMin, Timestamp dateMax) {
 		try {
 			boolean startWhere = true;
 
-			String sql = "SELECT * FROM Receipt";
+			String sql = "SELECT * FROM ReceiptSearch";
 
 			// CHECK ID
 			if (checkIdChoice) { // is exactly
@@ -85,7 +172,7 @@ public class Receipt {
 				} else {
 					sql += " AND ";
 				}
-				sql += "totalAmount = " + String.valueOf(totalAmount);
+				sql += "total = " + String.valueOf(totalAmount);
 			} else if (totalAmountChoice == 2) { // min/max
 				if (startWhere) {
 					startWhere = false;
@@ -93,8 +180,7 @@ public class Receipt {
 				} else {
 					sql += " AND ";
 				}
-				sql += "totalAmount BETWEEN " + String.valueOf(totalAmountMin) + " AND "
-						+ String.valueOf(totalAmountMax);
+				sql += "total BETWEEN " + String.valueOf(totalAmountMin) + " AND " + String.valueOf(totalAmountMax);
 			}
 
 			// DATE
@@ -150,8 +236,9 @@ public class Receipt {
 			while (rs.next()) {
 				receiptData[i][0] = String.valueOf(rs.getInt("checkID"));
 				receiptData[i][1] = String.valueOf(rs.getInt("tableNumber"));
-				receiptData[i][2] = String.valueOf(rs.getString("date"));
-				receiptData[i][3] = String.valueOf(rs.getBoolean("paid"));
+				receiptData[i][2] = "$" + String.format("%.02f", rs.getFloat("total"));
+				receiptData[i][3] = String.valueOf(rs.getString("date"));
+				receiptData[i][4] = String.valueOf(rs.getBoolean("paid"));
 				i++;
 			}
 
@@ -197,17 +284,6 @@ public class Receipt {
 			System.out.println(e);
 		}
 	}
-	
-	public void removeReceipts(int tableNumber) {
-		try {
-			String sql = "DELETE FROM Receipt WHERE tableNumber=?";
-			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setInt(1, tableNumber);
-			stmt.executeUpdate();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
 
 	public void updateReceipt(int checkID, boolean paymentStatus) {
 		try {
@@ -227,6 +303,11 @@ public class Receipt {
 //		
 //		String[][] arr = receipt.getReceipts(false, false, 0, 0, false, 0, 0, 0, null, true, 0, 0, null, null);
 //		print2DArray(arr);.
+//		ReceiptPage rp = new ReceiptPage(1);
+//		rp.setVisible(true);
+//		System.out.println(receipt.getMostRecentReceiptID(1));
+//		print2DArray(receipt.getOrderQuantities(receipt.getMostRecentReceiptID(1)));
+//		ReceiptPage rp = new ReceiptPage(1);
 	}
 
 	public static void print2DArray(String[][] arr) {

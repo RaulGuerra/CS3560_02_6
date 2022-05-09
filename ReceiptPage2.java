@@ -1,44 +1,40 @@
-
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.Dialog.ModalityType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.SwingConstants;
-
-import java.awt.SystemColor;
-import javax.swing.JTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
-public class ReceiptPage extends JDialog {
+// this is for specific checkID
+public class ReceiptPage2 extends JDialog {
 
 	private JPanel contentPane;
-	private JTable table;
 
 	/**
 	 * Launch the application.
 	 */
-	private static ReceiptPage frame;
-
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame = new ReceiptPage(7);
+					ReceiptPage2 frame = new ReceiptPage2(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,23 +42,21 @@ public class ReceiptPage extends JDialog {
 			}
 		});
 	}
+	private JTable table;
 
-//	private int tableNumber;
-//	private int checkID;
-//	private boolean paid;
-//	private float total;
-//	private String[][] orderQuantities;
 	private Receipt receipt;
+
 
 	/**
 	 * Create the frame.
 	 */
-	public ReceiptPage(int tableNumber) {
+	public ReceiptPage2(int checkID) {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		Table table1 = new Table(); // table in database
 
 		receipt = new Receipt();
-		receipt.getReceipt(receipt.getMostRecentReceiptID(tableNumber));
+		receipt.getReceipt(checkID);
+		int tableNumber = receipt.getTableNumber();
 
 		String[] orderColumns = { "Quantity", "Food Name", "Price" };
 		String[][] orderData = receipt.getOrderQuantities(receipt.getCheckID());
