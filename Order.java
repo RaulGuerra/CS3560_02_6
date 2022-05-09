@@ -48,11 +48,11 @@ public class Order
     	    
     	    while(rs.next()) {
     			int orderID = rs.getInt("orderID");
-    			int receiptID = rs.getInt("receiptID");
+    			int checkID = rs.getInt("checkID");
     			int foodID = rs.getInt("foodID");
     			String modification = rs.getString("modification");
     			
-    			orders.add(new Order(orderID, receiptID, foodID, modification));
+    			orders.add(new Order(orderID, checkID, foodID, modification));
     	    }
     	}catch(Exception e){System.out.println(e);}
 		
@@ -74,11 +74,11 @@ public class Order
 	 	    rs.next();
 	 	    
 	 	    int orderID = rs.getInt("orderID");
-			int receiptID = rs.getInt("receiptID");
+			int checkID = rs.getInt("checkID");
 			int foodID = rs.getInt("foodID");
 			String modification = rs.getString("modification");
 			
-			return new Order(orderID, receiptID, foodID, modification);
+			return new Order(orderID, checkID, foodID, modification);
 		}catch(Exception e){System.out.println(e);}
 		return null;
 	}
@@ -243,17 +243,17 @@ public class Order
 		ArrayList<Order> orders = new ArrayList<Order>();
 
 		try {
-    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ANY (SELECT checkID FROM `receipt` WHERE tableNumber=?)");
+    		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE checkID = ANY (SELECT checkID FROM `receipt` WHERE tableNumber=?)");
     		stmt.setInt(1, tableNum);
     	    ResultSet rs = stmt.executeQuery();
     	    
     	    while(rs.next()) {
     			int orderID = rs.getInt("orderID");
-    			int receiptID = rs.getInt("receiptID");
+    			int checkID = rs.getInt("checkID");
     			int foodID = rs.getInt("foodID");
     			String modification = rs.getString("modification");
     			
-    			orders.add(new Order(orderID, receiptID, foodID, modification));
+    			orders.add(new Order(orderID, checkID, foodID, modification));
     	    }
     	}catch(Exception e){System.out.println(e);}
 		
@@ -270,17 +270,17 @@ public class Order
 		ArrayList<Order> orders = new ArrayList<Order>();
 
 		try {
- 		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE receiptID = ?");
+ 		PreparedStatement stmt = c.prepareStatement("SELECT * FROM `order` WHERE checkID = ?");
  		stmt.setInt(1, receiptNum);
  	    ResultSet rs = stmt.executeQuery();
  	    
  	    while(rs.next()) {
  			int orderID = rs.getInt("orderID");
- 			int receiptID = rs.getInt("receiptID");
+ 			int checkID = rs.getInt("checkID");
  			int foodID = rs.getInt("foodID");
  			String modification = rs.getString("modification");
  			
- 			orders.add(new Order(orderID, receiptID, foodID, modification));
+ 			orders.add(new Order(orderID, checkID, foodID, modification));
  	    }
  	}catch(Exception e){System.out.println(e);}
 		
@@ -338,7 +338,7 @@ public class Order
 		Connection con = Main.getConnection();
 		
 		try {
-        	String sql ="DELETE FROM `Order` WHERE receiptID=?";
+        	String sql ="DELETE FROM `Order` WHERE checkID=?";
         	
         	PreparedStatement stmt = con.prepareStatement(sql);
         	stmt.setInt(1, checkID);
@@ -379,7 +379,7 @@ public class Order
 		Connection con = Main.getConnection();
 		
 		try {
-			String sql = "INSERT INTO `Order` (receiptID, foodID, modification) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO `Order` (checkID, foodID, modification) VALUES (?, ?, ?)";
 	    	//add respective values
 	    	PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, checkID);

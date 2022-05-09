@@ -196,6 +196,7 @@ public class OrderView extends JFrame {
 			                }
 			                
 			                model.addRow(new Object[]{lo.getOrderID(),fo.getName(),lo.getMod(), fo.getPrice()});
+			                
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}               

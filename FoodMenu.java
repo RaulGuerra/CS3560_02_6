@@ -1,6 +1,6 @@
 //package posSystem;
-import posSystem.SQLConnect;
-import posSystem.foodDesc;
+//import posSystem.SQLConnect;
+//import posSystem.foodDesc;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
