@@ -32,13 +32,14 @@ public class SearchOrders extends JDialog {
 	private JTextField txtModification;
 	private JTextField txtPrice;
 	private JTable table;
-
-	//Launch the application.
+	
+	private static SearchOrders frame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchOrders frame = new SearchOrders();
+					System.out.println("Launched");
+					frame = new SearchOrders();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -112,7 +113,7 @@ public class SearchOrders extends JDialog {
 	//Create the frame.
 	public SearchOrders() throws Exception {
 		setTitle("Search Orders");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -508,8 +509,16 @@ public class SearchOrders extends JDialog {
 		contentPane.add(btnRemove);
 
 		JButton btnEdit = new JButton("Edit Orders");
-		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEdit.setBackground(SystemColor.controlHighlight);
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (table.getSelectedRow() >= 0) {
+					OrderView ov = new OrderView(Integer.valueOf(table.getModel().getValueAt(table.getSelectedRow(), 2).toString()));
+					ov.setVisible(true);
+				}
+			}
+		});
+		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEdit.setBounds(225, 516, 170, 40);
 		contentPane.add(btnEdit);
 		
