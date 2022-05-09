@@ -3,7 +3,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,7 +40,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 
-public class OrderView extends JFrame {
+public class OrderView extends JDialog {
 	private JTable table;
 
 	/**
@@ -64,7 +63,8 @@ public class OrderView extends JFrame {
 	 * Create the frame.
 	 */
 	public OrderView(int receiptNumber) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 443, 292);
 		setResizable(false);
 		
