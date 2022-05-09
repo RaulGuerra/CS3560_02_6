@@ -173,9 +173,9 @@ public class OrderView extends JDialog {
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				SearchOrders so;
+				
 				try {
-					so = new SearchOrders();
+					SearchOrders so = new SearchOrders();
 					so.setVisible(true);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -183,6 +183,7 @@ public class OrderView extends JDialog {
 				}				
 			}
 		});
+		
 		btnNewButton_1_1.setActionCommand("Cancel");
 		btnNewButton_1_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
