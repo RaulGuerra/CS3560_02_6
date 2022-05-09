@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -38,7 +40,6 @@ public class SearchOrders extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					System.out.println("Launched");
 					frame = new SearchOrders();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -516,6 +517,8 @@ public class SearchOrders extends JDialog {
 					dispose();
 					OrderView ov = new OrderView(Integer.valueOf(table.getModel().getValueAt(table.getSelectedRow(), 2).toString()));
 					ov.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(null, "Please select an order.");
 				}
 			}
 		});
