@@ -249,6 +249,20 @@ public class Table {
 		} catch (Exception e) {System.out.println(e);}
 	}
 	
+	public boolean getOccupied(int tableNum) {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT occupied FROM `table` WHERE tableNumber=?");
+			stmt.setInt(1, tableNum);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getBoolean("occupied");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+	
+	
 	/**
      * Set the x-coordinate of where the table is on the UI
      * @param table number to edit
