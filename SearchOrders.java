@@ -513,6 +513,7 @@ public class SearchOrders extends JDialog {
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (table.getSelectedRow() >= 0) {
+					dispose();
 					OrderView ov = new OrderView(Integer.valueOf(table.getModel().getValueAt(table.getSelectedRow(), 2).toString()));
 					ov.setVisible(true);
 				}
