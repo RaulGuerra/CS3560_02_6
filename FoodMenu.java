@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -49,7 +52,7 @@ public class FoodMenu extends JDialog {
 	private void initialize(int receiptID) {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 784, 498);
+		setBounds(100, 100, 456, 498);
 		getContentPane().setLayout(null);
         
 		
@@ -62,11 +65,12 @@ public class FoodMenu extends JDialog {
 		}
 		
 		JComboBox comboBox = new JComboBox(food);
-		comboBox.setBounds(76, 162, 206, 22);
+		comboBox.setBounds(38, 109, 206, 22);
 		getContentPane().add(comboBox);
+		AutoCompleteDecorator.decorate(comboBox);
 		
-		JButton btnNewButton = new JButton("Add");
-		btnNewButton.setBounds(311, 162, 91, 23);
+		JButton btnNewButton = new JButton("Add to order");
+		btnNewButton.setBounds(273, 109, 126, 23);
 		getContentPane().add(btnNewButton);
 		
 		btnNewButton.addMouseListener(new MouseAdapter() {
@@ -112,12 +116,30 @@ public class FoodMenu extends JDialog {
 				//End Description gets clicked:
 			}
 		});
-		btnNewButton_2.setBounds(410, 162, 127, 22);
+		btnNewButton_2.setBounds(272, 143, 127, 22);
 		getContentPane().add(btnNewButton_2);
 		
-		JLabel lblNewLabel = new JLabel("Add Menu Items To Check:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel.setBounds(72, 58, 303, 45);
+		JLabel lblNewLabel = new JLabel("Food Menu");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		lblNewLabel.setBounds(38, 11, 303, 45);
 		getContentPane().add(lblNewLabel);
+		
+		JButton btnNewButton_1 = new JButton("Return");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+			}
+		});
+		btnNewButton_1.setBounds(273, 176, 126, 23);
+		getContentPane().add(btnNewButton_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Please select a food item to order or to view its description.");
+		lblNewLabel_1.setBounds(38, 53, 377, 22);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Press return if no selection is desired.");
+		lblNewLabel_2.setBounds(38, 73, 361, 14);
+		getContentPane().add(lblNewLabel_2);
 	}
 }

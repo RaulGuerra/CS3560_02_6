@@ -304,6 +304,15 @@ public class ReceiptPage2 extends JDialog {
 		contentPane.add(lblNewLabel_4_2_1);
 
 		JButton btnEditOrders = new JButton("Edit Orders");
+		btnEditOrders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+				OrderView OV = new OrderView(receipt.getCheckID());
+				OV.setVisible(true);
+				
+			}
+		});
 		btnEditOrders.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEditOrders.setBackground(SystemColor.controlHighlight);
 		btnEditOrders.setBounds(295, 257, 180, 40);

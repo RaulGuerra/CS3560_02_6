@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class MainMenu extends JFrame {
 
@@ -40,7 +41,7 @@ public class MainMenu extends JFrame {
 		setTitle("MainMenu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setBounds(100, 100, 215, 332);
+		setBounds(100, 100, 231, 332);
 		setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
@@ -57,7 +58,7 @@ public class MainMenu extends JFrame {
 		});
 		btnTables.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnTables.setBackground(SystemColor.controlHighlight);
-		btnTables.setBounds(10, 76, 180, 40);
+		btnTables.setBounds(70, 76, 180, 40);
 		contentPane.add(btnTables);
 		
 		JButton btnReceipts = new JButton("Receipts");
@@ -69,7 +70,7 @@ public class MainMenu extends JFrame {
 		});
 		btnReceipts.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnReceipts.setBackground(SystemColor.controlHighlight);
-		btnReceipts.setBounds(10, 127, 180, 40);
+		btnReceipts.setBounds(70, 127, 180, 40);
 		contentPane.add(btnReceipts);
 		
 		JButton btnMenu = new JButton("Menu");
@@ -86,10 +87,11 @@ public class MainMenu extends JFrame {
 		});
 		btnMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnMenu.setBackground(SystemColor.controlHighlight);
-		btnMenu.setBounds(10, 178, 180, 40);
+		btnMenu.setBounds(70, 178, 180, 40);
 		contentPane.add(btnMenu);
 		
 		JLabel lblNewLabel = new JLabel("Main Menu");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewLabel.setBounds(10, 11, 289, 54);
 		contentPane.add(lblNewLabel);
@@ -109,7 +111,7 @@ public class MainMenu extends JFrame {
 		});
 		btnOrders.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnOrders.setBackground(SystemColor.controlHighlight);
-		btnOrders.setBounds(10, 229, 180, 40);
+		btnOrders.setBounds(70, 229, 180, 40);
 		contentPane.add(btnOrders);
 	}
 }

@@ -16,6 +16,8 @@ import javax.swing.JDialog;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class foodDesc {
 
@@ -43,15 +45,19 @@ public class foodDesc {
 		frame = new JDialog();
 		frame.setModalityType(ModalityType.APPLICATION_MODAL);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setBounds(100, 100, 546, 407);
+		frame.setBounds(100, 100, 546, 374);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel(food);
-		lblNewLabel.setBounds(10, 11, 438, 77);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel.setBounds(10, 84, 470, 50);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel(desc);
-		lblNewLabel_1.setBounds(10, 97, 438, 204);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel_1.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_1.setBounds(10, 181, 470, 105);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		JButton btnNewButton = new JButton("Close");
@@ -63,8 +69,18 @@ public class foodDesc {
 				frame.dispose();
 			}
 		});
-		btnNewButton.setBounds(213, 326, 91, 23);
+		btnNewButton.setBounds(211, 297, 91, 23);
 		frame.getContentPane().add(btnNewButton);
+		
+		JLabel lblNewLabel_2 = new JLabel("Food Item:");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblNewLabel_2.setBounds(10, 72, 151, 14);
+		frame.getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Description:");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblNewLabel_3.setBounds(10, 156, 122, 14);
+		frame.getContentPane().add(lblNewLabel_3);
 	}
 	
 	public static void invokeDescWindow(String food, String desc)
@@ -80,5 +96,5 @@ public class foodDesc {
 			}
 		});
 		
-	};
+	}
 }

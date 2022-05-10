@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -699,6 +701,33 @@ public class SearchReceipts extends JDialog {
 		scrollPane.setViewportView(table);
 
 		JButton btnEditOrders = new JButton("Edit Orders");
+		btnEditOrders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int col = 0;
+				int row = table.getSelectedRow();
+				
+				if(row == -1)
+				{
+					JOptionPane.showMessageDialog(null, "Please select a receipt first.");
+				}
+				else {
+					dispose();
+					String value = table.getModel().getValueAt(row, col).toString();
+					System.out.println(value);
+					OrderView ov = new OrderView(Integer.valueOf(value));
+					ov.setVisible(true);
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+			}
+		});
 		btnEditOrders.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEditOrders.setBackground(SystemColor.controlHighlight);
 		btnEditOrders.setBounds(25, 567, 180, 40);
