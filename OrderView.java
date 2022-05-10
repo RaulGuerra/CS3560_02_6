@@ -175,8 +175,11 @@ public class OrderView extends JDialog {
 				dispose();
 				
 				try {
-					SearchOrders so = new SearchOrders();
-					so.setVisible(true);
+					
+					ReceiptPage2 rp2 = new ReceiptPage2(receiptNumber);
+					rp2.setVisible(true);
+					//SearchOrders so = new SearchOrders();
+					//so.setVisible(true);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -131,17 +131,34 @@ public class FoodDialog extends JDialog {
 		JButton btnNewButton_3 = new JButton("Delete Item");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				String name = "";
+				boolean success = false;
+				
 				try {
 					//get ID to edit this food item
-					String name = (String) list.getSelectedValue();
+					
+					
+					name = (String) list.getSelectedValue();
 					int id = food.getFoodID(name);
-					food.removeFoodItem(id);
+					success = food.removeFoodItem(id);
+					
 					//Remove food name from the listModel to reflect the change in the JList
-					listModel.removeElement(name);
+					//listModel.removeElement(name);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					
 				}
+				
+				if(success) {
+					listModel.removeElement(name);
+					System.out.println("flag is true");
+				}
+				
+				
+				
+				
 			}
 		});
 		

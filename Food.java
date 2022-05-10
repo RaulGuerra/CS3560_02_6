@@ -311,7 +311,7 @@ public class Food {
      * @param con Connection to establish the database
      * @throws Exception
      */
-    public void removeFoodItem(int foodID) throws Exception
+    public boolean removeFoodItem(int foodID) throws Exception
     {
     	try {
     		//Uses DELETE query, with the condition of the foodID. Deletes that row with that ID
@@ -320,7 +320,13 @@ public class Food {
     		stmt.setInt(1, foodID);
     		stmt.executeUpdate();
     		JOptionPane.showMessageDialog(null, "Food item deleted");
-    	} catch(Exception e){System.out.println(e);}
+    		return true;
+    	} catch(Exception e){
+    		
+    		System.out.println(e);
+    		return false;
+    	
+    	}
     }
 
     /**
