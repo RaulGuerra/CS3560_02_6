@@ -1,6 +1,6 @@
 This is the repository for the POS System group 6 project for CS3560 section 2.
 
-##Instructions for running:
+## Instructions for running:
 
 1. Install mariadb for your OS
 
