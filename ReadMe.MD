@@ -24,4 +24,4 @@ https://www.youtube.com/watch?v=KRhv4iPgzHE&ab_channel=StevenByrne
 
 7. Import the SQL file into HeidiSQL.
 
-8. Make sure your project is configured with the swingx file.
+8. Make sure your project is configured with the swingx-all-1.6.4.jar file and the mysql-connector-java-8.0.28.jar.
